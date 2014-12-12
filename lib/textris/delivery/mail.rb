@@ -48,40 +48,51 @@ module Textris
             var       = directive.split(':').first
             modifiers = directive.split(':')[1] || ''
 
-            content = if var == 'app'
-              Rails.application.class.parent_name
-            elsif var == 'env'
-              Rails.env
-            elsif var == 'texter' && (texter = message.texter).present?
-              texter.to_s.split('::').last.sub(/Texter$/, '')
-            elsif var == 'action' && (action = message.action).present?
-              action.to_s
-            elsif var == 'from_name' && (from = message.from_name).present?
-              from.to_s
-            elsif (value = vars[var.to_sym]).present?
-              value
-            elsif ['content', 'from_phone'].include?(var)
-              message.send(var)
-            end.to_s.strip
-
-            unless content.present?
-              content = 'unknown'
-            end
-
-            if modifiers.include?('d')
-              content = content.underscore.dasherize
-            end
-
-            if modifiers.include?('h')
-              content = content.humanize.gsub(/[-_]/, ' ')
-            end
-
-            if modifiers.include?('p')
-              content = Phony.format(content) rescue content
-            end
+            content = get_template_interpolation(var, message, vars)
+            content = apply_template_modifiers(content, modifiers)
 
             content
           end
+        end
+
+        def get_template_interpolation(var, message, vars)
+          content = if var == 'app'
+            Rails.application.class.parent_name
+          elsif var == 'env'
+            Rails.env
+          elsif var == 'texter' && (texter = message.texter).present?
+            texter.to_s.split('::').last.sub(/Texter$/, '')
+          elsif var == 'action' && (action = message.action).present?
+            action.to_s
+          elsif var == 'from_name' && (from = message.from_name).present?
+            from.to_s
+          elsif (value = vars[var.to_sym]).present?
+            value
+          elsif ['content', 'from_phone'].include?(var)
+            message.send(var)
+          end.to_s.strip
+
+          if content.present?
+            content
+          else
+            'unknown'
+          end
+        end
+
+        def apply_template_modifiers(content, modifiers)
+          if modifiers.include?('d')
+            content = content.underscore.dasherize
+          end
+
+          if modifiers.include?('h')
+            content = content.humanize.gsub(/[-_]/, ' ')
+          end
+
+          if modifiers.include?('p')
+            content = Phony.format(content) rescue content
+          end
+
+          content
         end
       end
     end
