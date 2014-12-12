@@ -58,7 +58,7 @@ end
 
 ### Twilio
 
-In order to use Twilio with textris, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
+In order to use Twilio with **Textris**, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
 
 ```ruby
 Twilio.configure do |config|
@@ -67,11 +67,11 @@ Twilio.configure do |config|
 end
 ```
 
-> Unless otherwise [configured](#configuration), Twilio will be the default delivery method in `development` and `production` environment, while the `test` method will be used in (surprise, surprise) `test` environment by default.
+> Unless otherwise [configured](#configuration), *Twilio* will be the default delivery method in `development` and `production` environment, while the *test* method will be used in (surprise, surprise) `test` environment by default.
 
 ### Custom delivery methods
 
-Currently, textris comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery method class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
+Currently, **Textris** comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery method class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
 
 ```ruby
 class MyProviderDelivery < Textris::Delivery::Base
@@ -89,7 +89,7 @@ end
 
 Only one of methods above must be implemented for the delivery class to work. In case of multiple phone numbers and no implementation of *send_message_to_all*, the *send_message* method will be invoked multiple times.
 
-> **NOTE**: You can also place your custom deliveries in `app/texters` if you don't want to clutter the *app* directory too much.
+> You can place your custom deliveries in `app/texters` instead of `app/deliveries` if you don't want to clutter the *app* directory too much.
 
 After implementing your own deliveries, you can activate them by setting app configuration:
 
@@ -147,12 +147,14 @@ config.textris_delivery_method = [:mail, :test]
 
 Configure the mail delivery with custom templates:
 
-```ruby
-# E-mail sender, here: "our-team-48666777888@test.app-name.com"
-config.textris_mail_from_template = '%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com'
+**Textris** comes with reasonable defaults for the `mail` delivery method. It will send messages to a Mailinator address specific to the application name, environment and target phone number. You can customize the mail delivery by setting appropriate templates presented below. Arguably, the *textris_mail_to_template* setting is the most important one as it specifies the target e-mail address scheme.
 
+```ruby
 # E-mail target, here: "app-name-test-48111222333-texts@mailinator.com"
 config.textris_mail_to_template = '%{app:d}-%{env:d}-%{to_phone}-texts@mailinator.com'
+
+# E-mail sender, here: "our-team-48666777888@test.app-name.com"
+config.textris_mail_from_template = '%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com'
 
 # E-mail subject, here: "User texter: Welcome"
 config.textris_mail_subject_template = '%{texter:dh} texter: %{action:h}'
