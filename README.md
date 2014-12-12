@@ -1,5 +1,6 @@
 # textris
 
+[![Build Status](https://travis-ci.org/visualitypl/textris.svg)](https://travis-ci.org/visualitypl/textris)
 [![Code Climate](https://codeclimate.com/github/visualitypl/textris/badges/gpa.svg)](https://codeclimate.com/github/visualitypl/textris)
 
 Simple gem for implementing texter classes which allow sending SMS messages in similar way to how e-mails are implemented and sent with ActionMailer-based mailers.
