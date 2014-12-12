@@ -1,5 +1,6 @@
 require 'action_controller'
 require 'action_mailer'
+require 'phony'
 
 require 'textris/base'
 require 'textris/message'
