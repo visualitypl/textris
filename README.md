@@ -4,17 +4,22 @@ Simple gem for implementing texter classes which allow sending SMS messages in s
 
 Unlike similar gems, **Textris** has some unique features:
 
-- phone number E164 validation and normalization with the [Phony](https://github.com/floere/phony) gem
-- multiple, per-environment configurable delivery methods
 - e-mail proxy allowing to inspect messages using [Mailinator](https://mailinator.com/) or similar service
+- phone number E164 validation and normalization with the [Phony](https://github.com/floere/phony) gem
+- multiple, per-environment configurable and chainable delivery methods
+- extensible with any number of custom delivery methods (also chainable)
 - support for testing using self-explanatory `Textris::Base.deliveries`
 - simple, extensible code written from the ground up instead of copying *ActionMailer*
+
+Currently, this gem comes with `test` and `mail` delivery methods, so there's no method for any real SMS gateway yet. Still, you can easily implement your own - see the [Custom delivery methods](#custom-delivery-methods) chapter below.
 
 ## Installation
 
 Add to `Gemfile`:
 
-    gem 'textris'
+```ruby
+gem 'textris'
+```
 
 And run:
 
@@ -36,7 +41,7 @@ class UserTexter < Textris::Base
 end
 ```
 
-Place relevant view templates in `app/views/<texter_name>/<action_name>.text.*`, (e.g. `app/views/user_texter/welcome.text.erb`):
+Place relevant view templates in `app/views/<texter_name>/<action_name>.text.*` (e.g. `app/views/user_texter/welcome.text.erb`):
 
 ```erb
 Welcome to our system, <%= @user.name %>!
@@ -50,6 +55,38 @@ class User < ActiveRecord::Base
     UserTexter.welcome(self).deliver
   end
 end
+```
+
+### Custom delivery methods
+
+Place desired delivery method in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
+
+```ruby
+class MyProviderDelivery < Textris::Delivery::Base
+  # Implement sending message to single phone number
+  self.send_message(phone, message)
+    some_send_method(:phone => phone, :text => message.content)
+  end
+
+  # ...or implement sending message to multiple phone numbers at once
+  self.send_message_to_all(message)
+    other_send_method(:phone_array => message.to, :text => message.content)
+  end
+end
+```
+
+> **NOTE**: You can also place your custom deliveries in `app/texters` if you don't want to clutter the *app* directory too much.
+
+Only one of methods above must be implemented for the delivery class to work. In case of multiple phone numbers and no implementation of *send_message_to_all*, the *send_message* method will be invoked multiple times.
+
+After implementing your own deliveries, you can activate them by setting app configuration:
+
+```ruby
+# Use your new delivery
+config.textris_delivery_method = :my_provider
+
+# Chain your new delivery with others, including stock ones
+config.textris_delivery_method = [:my_provider, :mail]
 ```
 
 ## Testing
@@ -88,9 +125,12 @@ config.textris_delivery_method = :test
 
 # Send e-mails instead of SMSes in order to inspect their content
 config.textris_delivery_method = :mail
+
+# Chain multiple delivery methods (e.g. to have e-mail backups of your messages)
+config.textris_delivery_method = [:mail, :test]
 ```
 
-Configure the mail delivery:
+Configure the mail delivery with custom templates:
 
 ```ruby
 # E-mail sender, here: "our-team-48666777888@test.app-name.com"

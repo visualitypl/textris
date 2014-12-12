@@ -26,8 +26,10 @@ module Textris
     end
 
     def deliver
-      delivery = ::Textris::Delivery.get
-      delivery.send_message_to_all(self)
+      deliveries = ::Textris::Delivery.get
+      deliveries.each do |delivery|
+        delivery.send_message_to_all(self)
+      end
 
       self
     end

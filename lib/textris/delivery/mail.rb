@@ -1,6 +1,6 @@
 module Textris
   module Delivery
-    class Mail
+    class Mail < Textris::Delivery::Base
       class Mailer < ActionMailer::Base
         def notify(from, to, subject, body)
           mail :from => from, :to => to, :subject => subject, :body => body
@@ -8,12 +8,6 @@ module Textris
       end
 
       class << self
-        def send_message_to_all(message)
-          message.to.each do |to|
-            send_message(to, message)
-          end
-        end
-
         private
 
         def send_message(to, message)

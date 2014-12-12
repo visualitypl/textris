@@ -3,14 +3,16 @@ module Textris
     module_function
 
     def get
-      case Rails.application.config.try(:textris_delivery_method).to_s
-      when 'mail'
-        ::Textris::Delivery::Mail
-      when 'test'
-        ::Textris::Delivery::Test
-      else
-        ::Textris::Delivery::Test
+      methods = Rails.application.config.try(:textris_delivery_method)
+      methods = [*methods].compact
+      if methods.blank?
+        methods = [:test]
       end
+
+      methods.map do |method|
+        "Textris::Delivery::#{method.to_s.camelize}".safe_constantize ||
+          "#{method.to_s.camelize}Delivery".safe_constantize
+      end.compact
     end
   end
 end
