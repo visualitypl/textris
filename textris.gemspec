@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name     = 'textris'
-  spec.version  = '0.1.2'
+  spec.version  = '0.1.3'
   spec.authors  = ['Karol Słuszniak']
   spec.email    = 'k.sluszniak@visuality.pl'
   spec.homepage = 'http://github.com/visualitypl/textris'
@@ -19,6 +19,7 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files = ["README.md"]
   spec.require_paths    = ["lib"]
 
-  spec.add_runtime_dependency('render_anywhere', '>= 0.0.10')
-  spec.add_runtime_dependency('actionmailer', '>= 4.0.0')
+  spec.add_runtime_dependency('render_anywhere', '~> 0.0')
+  spec.add_runtime_dependency('actionmailer', '~> 4.0')
+  spec.add_runtime_dependency('twilio-ruby', '~> 3.12')
 end

@@ -1,8 +1,8 @@
-# Textris
+# textris
 
 Simple gem for implementing texter classes which allow sending SMS messages in similar way to how e-mails are implemented and sent with ActionMailer-based mailers.
 
-Unlike similar gems, **Textris** has some unique features:
+Unlike similar gems, **textris** has some unique features:
 
 - e-mail proxy allowing to inspect messages using [Mailinator](https://mailinator.com/) or similar service
 - phone number E164 validation and normalization with the [phony](https://github.com/floere/phony) gem
@@ -58,7 +58,7 @@ end
 
 ### Twilio
 
-In order to use Twilio with **Textris**, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
+In order to use Twilio with **textris**, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
 
 ```ruby
 Twilio.configure do |config|
@@ -71,17 +71,17 @@ end
 
 ### Custom delivery methods
 
-Currently, **Textris** comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery method class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
+Currently, **textris** comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
 
 ```ruby
 class MyProviderDelivery < Textris::Delivery::Base
   # Implement sending message to single phone number
-  self.send_message(phone, message)
+  def self.send_message(phone, message)
     some_send_method(:phone => phone, :text => message.content)
   end
 
   # ...or implement sending message to multiple phone numbers at once
-  self.send_message_to_all(message)
+  def self.send_message_to_all(message)
     other_send_method(:phone_array => message.to, :text => message.content)
   end
 end
@@ -129,7 +129,7 @@ will yield multiple message deliveries, each for specific phone number.
 
 You can change default settings by placing them in any of environment files, like `development.rb` or `test.rb`, or setting them globally in `application.rb`.
 
-### Choosing & chaining delivery methods
+### Choosing and chaining delivery methods
 
 ```ruby
 # Send messages via the Twilio REST API using the twilio-ruby gem
@@ -147,7 +147,7 @@ config.textris_delivery_method = [:mail, :test]
 
 ### Configuring the mail delivery
 
-**Textris** comes with reasonable defaults for the `mail` delivery method. It will send messages to a Mailinator address specific to the application name, environment and target phone number. You can customize the mail delivery by setting appropriate templates presented below.
+**textris** comes with reasonable defaults for the `mail` delivery method. It will send messages to a Mailinator address specific to the application name, environment and target phone number. You can customize the mail delivery by setting appropriate templates presented below.
 
 > Arguably, the *textris_mail_to_template* setting is the most important here as it specifies the target e-mail address scheme.
 
