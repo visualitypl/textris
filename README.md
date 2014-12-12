@@ -129,7 +129,7 @@ will yield multiple message deliveries, each for specific phone number.
 
 You can change default settings by placing them in any of environment files, like `development.rb` or `test.rb`, or setting them globally in `application.rb`.
 
-Choose the delivery method:
+### Choosing & chaining delivery methods
 
 ```ruby
 # Send messages via the Twilio REST API using the twilio-ruby gem
@@ -145,9 +145,11 @@ config.textris_delivery_method = :mail
 config.textris_delivery_method = [:mail, :test]
 ```
 
-Configure the mail delivery with custom templates:
+### Configuring the mail delivery
 
-**Textris** comes with reasonable defaults for the `mail` delivery method. It will send messages to a Mailinator address specific to the application name, environment and target phone number. You can customize the mail delivery by setting appropriate templates presented below. Arguably, the *textris_mail_to_template* setting is the most important one as it specifies the target e-mail address scheme.
+**Textris** comes with reasonable defaults for the `mail` delivery method. It will send messages to a Mailinator address specific to the application name, environment and target phone number. You can customize the mail delivery by setting appropriate templates presented below.
+
+> Arguably, the *textris_mail_to_template* setting is the most important here as it specifies the target e-mail address scheme.
 
 ```ruby
 # E-mail target, here: "app-name-test-48111222333-texts@mailinator.com"
