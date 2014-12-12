@@ -14,7 +14,7 @@ module Textris
         end
 
         def client
-          @client ||= Twilio::REST::Client.new
+          @client ||= ::Twilio::REST::Client.new
         end
       end
     end

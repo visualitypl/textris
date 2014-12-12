@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name     = 'textris'
-  spec.version  = '0.1.5'
+  spec.version  = '0.1.6'
   spec.authors  = ['Karol Słuszniak']
   spec.email    = 'k.sluszniak@visuality.pl'
   spec.homepage = 'http://github.com/visualitypl/textris'

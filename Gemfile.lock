@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    textris (0.1.5)
+    textris (0.1.6)
       actionmailer (~> 4.0)
       phony (~> 2.8)
       render_anywhere (~> 0.0)
