@@ -5,13 +5,12 @@ Simple gem for implementing texter classes which allow sending SMS messages in s
 Unlike similar gems, **Textris** has some unique features:
 
 - e-mail proxy allowing to inspect messages using [Mailinator](https://mailinator.com/) or similar service
-- phone number E164 validation and normalization with the [Phony](https://github.com/floere/phony) gem
+- phone number E164 validation and normalization with the [phony](https://github.com/floere/phony) gem
 - multiple, per-environment configurable and chainable delivery methods
+- built-in support for the Twilio API thanks to the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
 - extensible with any number of custom delivery methods (also chainable)
 - support for testing using self-explanatory `Textris::Base.deliveries`
 - simple, extensible code written from the ground up instead of copying *ActionMailer*
-
-Currently, this gem comes with `test` and `mail` delivery methods, so there's no method for any real SMS gateway yet. Still, you can easily implement your own - see the [Custom delivery methods](#custom-delivery-methods) chapter below.
 
 ## Installation
 
@@ -57,9 +56,22 @@ class User < ActiveRecord::Base
 end
 ```
 
+### Twilio
+
+In order to use Twilio with textris, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
+
+```ruby
+Twilio.configure do |config|
+  config.account_sid = 'some_sid'
+  config.auth_token  = 'some_auth_token'
+end
+```
+
+> Unless otherwise [configured](#configuration), Twilio will be the default delivery method in `development` and `production` environment, while the `test` method will be used in (surprise, surprise) `test` environment by default.
+
 ### Custom delivery methods
 
-Place desired delivery method in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
+Currently, textris comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery method class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
 
 ```ruby
 class MyProviderDelivery < Textris::Delivery::Base
@@ -75,9 +87,9 @@ class MyProviderDelivery < Textris::Delivery::Base
 end
 ```
 
-> **NOTE**: You can also place your custom deliveries in `app/texters` if you don't want to clutter the *app* directory too much.
-
 Only one of methods above must be implemented for the delivery class to work. In case of multiple phone numbers and no implementation of *send_message_to_all*, the *send_message* method will be invoked multiple times.
+
+> **NOTE**: You can also place your custom deliveries in `app/texters` if you don't want to clutter the *app* directory too much.
 
 After implementing your own deliveries, you can activate them by setting app configuration:
 
@@ -86,7 +98,7 @@ After implementing your own deliveries, you can activate them by setting app con
 config.textris_delivery_method = :my_provider
 
 # Chain your new delivery with others, including stock ones
-config.textris_delivery_method = [:my_provider, :mail]
+config.textris_delivery_method = [:my_provider, :twilio, :mail]
 ```
 
 ## Testing
@@ -120,6 +132,9 @@ You can change default settings by placing them in any of environment files, lik
 Choose the delivery method:
 
 ```ruby
+# Send messages via the Twilio REST API using the twilio-ruby gem
+config.textris_delivery_method = :twilio
+
 # Don't send anything, access your messages via Textris::Base.deliveries
 config.textris_delivery_method = :test
 

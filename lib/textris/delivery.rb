@@ -6,7 +6,11 @@ module Textris
       methods = Rails.application.config.try(:textris_delivery_method)
       methods = [*methods].compact
       if methods.blank?
-        methods = [:test]
+        if Rails.env.test?
+          methods = [:test]
+        else
+          methods = [:twilio]
+        end
       end
 
       methods.map do |method|
