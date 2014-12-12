@@ -24,43 +24,55 @@ And run:
 
 Place texter classes in `app/texters` (e.g. `app/texters/user_texter.rb`):
 
-    class UserTexter < Textris::Base
-      default :from => "Our Team <+48 666-777-888>"
+```ruby
+class UserTexter < Textris::Base
+  default :from => "Our Team <+48 666-777-888>"
 
-      def welcome(user)
-        @user = user
+  def welcome(user)
+    @user = user
 
-        text :to => @user.phone
-      end
-    end
+    text :to => @user.phone
+  end
+end
+```
 
 Place relevant view templates in `app/views/<texter_name>/<action_name>.text.*`, (e.g. `app/views/user_texter/welcome.text.erb`):
 
-    Welcome to our system, <%= @user.name %>!
+```erb
+Welcome to our system, <%= @user.name %>!
+```
 
 Invoke them from application logic:
 
-    class User < ActiveRecord::Base
-      after_create do
-        UserTexter.welcome(self).deliver
-      end
-    end
+```ruby
+class User < ActiveRecord::Base
+  after_create do
+    UserTexter.welcome(self).deliver
+  end
+end
+```
 
 ## Testing
 
 Access all messages that were sent with the `:test` delivery:
 
-    Textris::Base.deliveries
+```ruby
+Textris::Base.deliveries
+```
 
 You may want to clear the delivery queue before each test:
 
-    before(:each) do
-      Textris::Base.deliveries.clear
-    end
+```ruby
+before(:each) do
+  Textris::Base.deliveries.clear
+end
+```
 
 Keep in mind that messages targeting multiple phone numbers, like:
 
-    text :to => ['48111222333', '48222333444']
+```ruby
+text :to => ['48111222333', '48222333444']
+```
 
 will yield multiple message deliveries, each for specific phone number.
 
@@ -70,25 +82,29 @@ You can change default settings by placing them in any of environment files, lik
 
 Choose the delivery method:
 
-    # Don't send anything, access your messages via Textris::Base.deliveries
-    config.textris_delivery_method = :test
+```ruby
+# Don't send anything, access your messages via Textris::Base.deliveries
+config.textris_delivery_method = :test
 
-    # Send e-mails instead of SMSes in order to inspect their content
-    config.textris_delivery_method = :mail
+# Send e-mails instead of SMSes in order to inspect their content
+config.textris_delivery_method = :mail
+```
 
 Configure the mail delivery:
 
-    # E-mail sender, here: "our-team-48666777888@test.app-name.com"
-    config.textris_mail_from_template = '%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com'
+```ruby
+# E-mail sender, here: "our-team-48666777888@test.app-name.com"
+config.textris_mail_from_template = '%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com'
 
-    # E-mail target, here: "app-name-test-48111222333-texts@mailinator.com"
-    config.textris_mail_to_template = '%{app:d}-%{env:d}-%{to_phone}-texts@mailinator.com'
+# E-mail target, here: "app-name-test-48111222333-texts@mailinator.com"
+config.textris_mail_to_template = '%{app:d}-%{env:d}-%{to_phone}-texts@mailinator.com'
 
-    # E-mail subject, here: "User texter: Welcome"
-    config.textris_mail_subject_template = '%{texter:dh} texter: %{action:h}'
+# E-mail subject, here: "User texter: Welcome"
+config.textris_mail_subject_template = '%{texter:dh} texter: %{action:h}'
 
-    # E-mail body, here: "Welcome to our system, Mr Jones!"
-    config.textris_mail_body_template = '%{content}'
+# E-mail body, here: "Welcome to our system, Mr Jones!"
+config.textris_mail_body_template = '%{content}'
+```
 
 ### Template interpolation
 
