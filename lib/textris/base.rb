@@ -6,7 +6,7 @@ module Textris
 
     class << self
       def deliveries
-        ::Textris::Delivery::Test.messages
+        ::Textris::Delivery::Test.deliveries
       end
 
       def with_defaults(options)
