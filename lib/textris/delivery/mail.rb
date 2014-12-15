@@ -42,40 +42,45 @@ module Textris
             "%{content}"
         end
 
-        def apply_template(template, message, vars)
+        def apply_template(template, message, variables)
           template.gsub(/\%\{[a-z_:]+\}/) do |match|
             directive = match.gsub(/[%{}]/, '')
-            var       = directive.split(':').first
+            key       = directive.split(':').first
             modifiers = directive.split(':')[1] || ''
 
-            content = get_template_interpolation(var, message, vars)
+            content = get_template_interpolation(key, message, variables)
             content = apply_template_modifiers(content, modifiers.chars)
+            content = 'unknown' unless content.present?
 
             content
           end
         end
 
-        def get_template_interpolation(var, message, vars)
-          content = case var
+        def get_template_interpolation(key, message, variables)
+          content = case key
           when 'app'
-            Rails.application.class.parent_name
+            get_rails_application_name
           when 'env'
-            Rails.env
+            get_rails_env_name
           when 'texter'
-            message.texter.to_s.split('::').last.to_s.sub(/Texter$/, '')
-          when 'action', 'from_name'
-            message.send(var)
-          when 'content', 'from_phone'
-            message.send(var)
+            get_message_texter_name(message)
+          when 'action', 'from_name', 'from_phone', 'content'
+            message.send(key)
           else
-            value = vars[var.to_sym]
+            variables[key.to_sym]
           end.to_s.strip
+        end
 
-          if content.present?
-            content
-          else
-            'unknown'
-          end
+        def get_rails_application_name
+          Rails.application.class.parent_name
+        end
+
+        def get_rails_env_name
+          Rails.env
+        end
+
+        def get_message_texter_name(message)
+          message.texter.to_s.split('::').last.to_s.sub(/Texter$/, '')
         end
 
         def apply_template_modifiers(content, modifiers)

@@ -13,7 +13,7 @@ Unlike similar gems, **textris** has some unique features:
 - multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
 - support for testing using self-explanatory `Textris::Base.deliveries`
-- simple, extensible and fully tested code written from the ground up instead of copying guts of *ActionMailer*
+- simple, extensible, fully tested code written from the ground up instead of copying *ActionMailer*
 
 ## Installation
 
@@ -23,7 +23,7 @@ Add to `Gemfile`:
 gem 'textris'
 ```
 
-And run:
+Then run:
 
     bundle install
 
@@ -174,14 +174,14 @@ config.textris_mail_body_template = '%{content}'
 
 You can use the following interpolations in your mail templates:
 
-- `%{app}`: application name (like `AppName`)
-- `%{env}`: enviroment name (like `test` or `production`)
-- `%{texter}`: texter name (like `User`)
-- `%{action}`: action name (like `welcome`)
-- `%{from_name}`: name of the sender (like `Our Team`)
-- `%{from_phone}`: phone number of the sender (like `48666777888`)
-- `%{to_phone}`: phone number of the recipient (like `48111222333`)
-- `%{content}`: message content (like `Welcome to our system, Mr Jones!`)
+- `%{app}`: application name (e.g. `AppName`)
+- `%{env}`: enviroment name (e.g. `test` or `production`)
+- `%{texter}`: texter name (e.g. `User`)
+- `%{action}`: action name (e.g. `welcome`)
+- `%{from_name}`: name of the sender (e.g. `Our Team`)
+- `%{from_phone}`: phone number of the sender (e.g. `48666777888`)
+- `%{to_phone}`: phone number of the recipient (e.g. `48111222333`)
+- `%{content}`: message content (e.g. `Welcome to our system, Mr Jones!`)
 
 You can add optional interpolation modifiers using the `%{variable:modifiers}` syntax. These are most useful for making names e-mail friendly. The following modifiers are available:
 
