@@ -9,11 +9,11 @@ Unlike similar gems, **textris** has some unique features:
 
 - e-mail proxy allowing to inspect messages using [Mailinator](https://mailinator.com/) or similar service
 - phone number E164 validation and normalization with the [phony](https://github.com/floere/phony) gem
-- multiple, per-environment configurable and chainable delivery methods
 - built-in support for the Twilio API thanks to the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
+- multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
 - support for testing using self-explanatory `Textris::Base.deliveries`
-- simple, extensible code written from the ground up instead of copying *ActionMailer*
+- simple, extensible and fully tested code written from the ground up instead of copying guts of *ActionMailer*
 
 ## Installation
 
@@ -59,7 +59,55 @@ class User < ActiveRecord::Base
 end
 ```
 
-### Twilio
+## Testing
+
+Access all messages that were sent with the `:test` delivery:
+
+```ruby
+Textris::Base.deliveries
+```
+
+You may want to clear the delivery queue before each test:
+
+```ruby
+before(:each) do
+  Textris::Base.deliveries.clear
+end
+```
+
+Keep in mind that messages targeting multiple phone numbers, like:
+
+```ruby
+text :to => ['48111222333', '48222333444']
+```
+
+will yield multiple message deliveries, each for specific phone number.
+
+## Configuration
+
+You can change default settings by placing them in any of environment files, like `development.rb` or `test.rb`, or setting them globally in `application.rb`.
+
+### Choosing and chaining delivery methods
+
+Below you'll find sample settings for any of supported delivery methods along with short description of each:
+
+```ruby
+# Send messages via the Twilio REST API
+config.textris_delivery_method = :twilio
+
+# Don't send anything, access your messages via Textris::Base.deliveries
+config.textris_delivery_method = :test
+
+# Send e-mails instead of SMSes in order to inspect their content
+config.textris_delivery_method = :mail
+
+# Chain multiple delivery methods (e.g. to have e-mail backups of your messages)
+config.textris_delivery_method = [:mail, :test]
+```
+
+> Unless otherwise configured, *Twilio* will be the default delivery method in `development` and `production` environments, while the *test* method will be used in `test` environment by default.
+
+#### Twilio
 
 In order to use Twilio with **textris**, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
 
@@ -70,9 +118,7 @@ Twilio.configure do |config|
 end
 ```
 
-> Unless otherwise [configured](#configuration), *Twilio* will be the default delivery method in `development` and `production` environment, while the *test* method will be used in (surprise, surprise) `test` environment by default.
-
-### Custom delivery methods
+#### Custom delivery methods
 
 Currently, **textris** comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
 
@@ -104,50 +150,6 @@ config.textris_delivery_method = :my_provider
 config.textris_delivery_method = [:my_provider, :twilio, :mail]
 ```
 
-## Testing
-
-Access all messages that were sent with the `:test` delivery:
-
-```ruby
-Textris::Base.deliveries
-```
-
-You may want to clear the delivery queue before each test:
-
-```ruby
-before(:each) do
-  Textris::Base.deliveries.clear
-end
-```
-
-Keep in mind that messages targeting multiple phone numbers, like:
-
-```ruby
-text :to => ['48111222333', '48222333444']
-```
-
-will yield multiple message deliveries, each for specific phone number.
-
-## Configuration
-
-You can change default settings by placing them in any of environment files, like `development.rb` or `test.rb`, or setting them globally in `application.rb`.
-
-### Choosing and chaining delivery methods
-
-```ruby
-# Send messages via the Twilio REST API using the twilio-ruby gem
-config.textris_delivery_method = :twilio
-
-# Don't send anything, access your messages via Textris::Base.deliveries
-config.textris_delivery_method = :test
-
-# Send e-mails instead of SMSes in order to inspect their content
-config.textris_delivery_method = :mail
-
-# Chain multiple delivery methods (e.g. to have e-mail backups of your messages)
-config.textris_delivery_method = [:mail, :test]
-```
-
 ### Configuring the mail delivery
 
 **textris** comes with reasonable defaults for the `mail` delivery method. It will send messages to a Mailinator address specific to the application name, environment and target phone number. You can customize the mail delivery by setting appropriate templates presented below.
@@ -168,18 +170,18 @@ config.textris_mail_subject_template = '%{texter:dh} texter: %{action:h}'
 config.textris_mail_body_template = '%{content}'
 ```
 
-### Template interpolation
+#### Template interpolation
 
 You can use the following interpolations in your mail templates:
 
-- `app`: application name (like `AppName`)
-- `env`: enviroment name (like `test` or `production`)
-- `texter`: texter name (like `User`)
-- `action`: action name (like `welcome`)
-- `from_name`: name of the sender (like `Our Team`)
-- `from_phone`: phone number of the sender (like `48666777888`)
-- `to_phone`: phone number of the recipient (like `48111222333`)
-- `content`: message content (like `Welcome to our system, Mr Jones!`)
+- `%{app}`: application name (like `AppName`)
+- `%{env}`: enviroment name (like `test` or `production`)
+- `%{texter}`: texter name (like `User`)
+- `%{action}`: action name (like `welcome`)
+- `%{from_name}`: name of the sender (like `Our Team`)
+- `%{from_phone}`: phone number of the sender (like `48666777888`)
+- `%{to_phone}`: phone number of the recipient (like `48111222333`)
+- `%{content}`: message content (like `Welcome to our system, Mr Jones!`)
 
 You can add optional interpolation modifiers using the `%{variable:modifiers}` syntax. These are most useful for making names e-mail friendly. The following modifiers are available:
 
@@ -189,7 +191,7 @@ You can add optional interpolation modifiers using the `%{variable:modifiers}` s
 
 ## Contributing
 
-1. Fork it (https://github.com/visualitypl/codegrade/fork)
+1. Fork it (https://github.com/visualitypl/textris/fork)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
