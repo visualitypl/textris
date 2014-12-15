@@ -2,6 +2,12 @@ require 'render_anywhere'
 
 module Textris
   class Base
+    class RenderingController < RenderAnywhere::RenderingController
+      def default_url_options
+        ActionMailer::Base.default_url_options || {}
+      end
+    end
+
     include RenderAnywhere
 
     class << self
@@ -24,12 +30,6 @@ module Textris
 
       def method_missing(method_name, *args)
         self.new(method_name, *args).call_action
-      end
-    end
-
-    class RenderingController < RenderAnywhere::RenderingController
-      def default_url_options
-        ActionMailer::Base.default_url_options || {}
       end
     end
 

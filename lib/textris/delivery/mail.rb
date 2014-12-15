@@ -49,27 +49,26 @@ module Textris
             modifiers = directive.split(':')[1] || ''
 
             content = get_template_interpolation(var, message, vars)
-            content = apply_template_modifiers(content, modifiers)
+            content = apply_template_modifiers(content, modifiers.chars)
 
             content
           end
         end
 
         def get_template_interpolation(var, message, vars)
-          content = if var == 'app'
+          content = case var
+          when 'app'
             Rails.application.class.parent_name
-          elsif var == 'env'
+          when 'env'
             Rails.env
-          elsif var == 'texter' && (texter = message.texter).present?
-            texter.to_s.split('::').last.sub(/Texter$/, '')
-          elsif var == 'action' && (action = message.action).present?
-            action.to_s
-          elsif var == 'from_name' && (from = message.from_name).present?
-            from.to_s
-          elsif (value = vars[var.to_sym]).present?
-            value
-          elsif ['content', 'from_phone'].include?(var)
+          when 'texter'
+            message.texter.to_s.split('::').last.to_s.sub(/Texter$/, '')
+          when 'action', 'from_name'
             message.send(var)
+          when 'content', 'from_phone'
+            message.send(var)
+          else
+            value = vars[var.to_sym]
           end.to_s.strip
 
           if content.present?
@@ -80,16 +79,15 @@ module Textris
         end
 
         def apply_template_modifiers(content, modifiers)
-          if modifiers.include?('d')
-            content = content.underscore.dasherize
-          end
-
-          if modifiers.include?('h')
-            content = content.humanize.gsub(/[-_]/, ' ')
-          end
-
-          if modifiers.include?('p')
-            content = Phony.format(content) rescue content
+          modifiers.each do |modifier|
+            case modifier
+            when 'd'
+              content = content.underscore.dasherize
+            when 'h'
+              content = content.humanize.gsub(/[-_]/, ' ')
+            when 'p'
+              content = Phony.format(content) rescue content
+            end
           end
 
           content
