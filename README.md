@@ -14,6 +14,7 @@ Unlike similar gems, **textris** has some unique features:
 - built-in support for the Twilio API thanks to the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
 - multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
+- background and scheduled processing thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
 - support for testing using self-explanatory `Textris::Base.deliveries`
 - simple, extensible, fully tested code written from the ground up instead of copying *ActionMailer*
 
@@ -60,6 +61,30 @@ class User < ActiveRecord::Base
   end
 end
 ```
+
+### Background and scheduled processing
+
+You can send your messages in the background, either right away or at specified time using Sidekiq. To do so, first include the `Textris::Delay::Sidekiq` module in your texter:
+
+```ruby
+class UserTexter < Textris::Base
+  include Textris::Delay::Sidekiq
+
+  def welcome(user)
+    # ...
+  end
+end
+```
+
+Then use one of three delay methods.
+
+```ruby
+UserTexter.delay.welcome(user)
+UserTexter.delay_for(1.hour).welcome(user)
+UserTexter.delay_until(1.day.from_now).welcome(user)
+```
+
+> Calling deliver is not needed in this case. It will be called in the *Textris::Delay::Sidekiq::Worker* worker.
 
 ## Testing
 
