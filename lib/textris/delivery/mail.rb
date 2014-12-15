@@ -58,29 +58,22 @@ module Textris
 
         def get_template_interpolation(key, message, variables)
           content = case key
-          when 'app'
-            get_rails_application_name
-          when 'env'
-            get_rails_env_name
-          when 'texter'
-            get_message_texter_name(message)
-          when 'action', 'from_name', 'from_phone', 'content'
+          when 'app', 'env'
+            get_rails_variable(key)
+          when 'texter', 'action', 'from_name', 'from_phone', 'content'
             message.send(key)
           else
             variables[key.to_sym]
           end.to_s.strip
         end
 
-        def get_rails_application_name
-          Rails.application.class.parent_name
-        end
-
-        def get_rails_env_name
-          Rails.env
-        end
-
-        def get_message_texter_name(message)
-          message.texter.to_s.split('::').last.to_s.sub(/Texter$/, '')
+        def get_rails_variable(var)
+          case var
+          when 'app'
+            Rails.application.class.parent_name
+          when 'env'
+            Rails.env
+          end
         end
 
         def apply_template_modifiers(content, modifiers)

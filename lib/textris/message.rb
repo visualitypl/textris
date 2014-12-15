@@ -34,6 +34,12 @@ module Textris
       self
     end
 
+    def texter
+      if @texter.present?
+        @texter.to_s.split('::').last.to_s.sub(/Texter$/, '')
+      end
+    end
+
     private
 
     def parse_from(from)
