@@ -1,2 +1,7 @@
+checks:
+  ruby:
+    code_rating: true
+    duplicate_code: true
+
 tools:
   external_code_coverage: true
