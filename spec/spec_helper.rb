@@ -2,9 +2,16 @@ require 'simplecov'
 require 'scrutinizer/ocular'
 
 Scrutinizer::Ocular.watch!
-SimpleCov.start do
-  add_filter "/spec/"
-end if ENV["COVERAGE"]
+
+if Scrutinizer::Ocular.should_run? || ENV["COVERAGE"]
+  if Scrutinizer::Ocular.should_run?
+    SimpleCov.formatter = Scrutinizer::Ocular::UploadFormatter
+  end
+
+  SimpleCov.start do
+    add_filter "/spec/"
+  end
+end
 
 require_relative '../lib/textris'
 
