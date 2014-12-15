@@ -37,14 +37,20 @@ module Textris
     private
 
     def parse_from(from)
-      if from.blank?
-        nil
-      elsif (matches = from.match(/(.*)\<(.*)\>\s*$/).to_a).size == 3 &&
+      parse_from_dual(from) || parse_from_singular(from)
+    end
+
+    def parse_from_dual(from)
+      if (matches = from.to_s.match(/(.*)\<(.*)\>\s*$/).to_a).size == 3 &&
           Phony.plausible?(matches[2])
         [matches[1].strip, Phony.normalize(matches[2])]
-      elsif Phony.plausible?(from)
+      end
+    end
+
+    def parse_from_singular(from)
+      if Phony.plausible?(from)
         [nil, Phony.normalize(from)]
-      else
+      elsif from.present?
         [from.strip, nil]
       end
     end
