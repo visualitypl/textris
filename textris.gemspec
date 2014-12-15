@@ -21,10 +21,11 @@ Gem::Specification.new do |spec|
   spec.test_files       = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths    = ["lib"]
 
-  spec.add_development_dependency 'bundler',   '~> 1.7'
-  spec.add_development_dependency 'rake',      '~> 10.0'
-  spec.add_development_dependency 'rspec',     '~> 3.1'
-  spec.add_development_dependency 'simplecov', '~> 0.9'
+  spec.add_development_dependency 'bundler',            '~> 1.7'
+  spec.add_development_dependency 'rake',               '~> 10.0'
+  spec.add_development_dependency 'rspec',              '~> 3.1'
+  spec.add_development_dependency 'simplecov',          '~> 0.9'
+  spec.add_development_dependency 'scrutinizer-ocular', '~> 1.0'
 
   spec.add_runtime_dependency 'actionmailer',    '~> 4.0'
   spec.add_runtime_dependency 'render_anywhere', '~> 0.0'

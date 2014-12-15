@@ -1,5 +1,7 @@
 require 'simplecov'
+require 'scrutinizer/ocular'
 
+Scrutinizer::Ocular.watch!
 SimpleCov.start do
   add_filter "/spec/"
 end if ENV["COVERAGE"]
