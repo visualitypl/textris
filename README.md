@@ -64,7 +64,7 @@ end
 
 ### Background and scheduled processing
 
-You can send your messages in the background, either right away or at specified time using Sidekiq. To do so, first include the `Textris::Delay::Sidekiq` module in your texter:
+Thanks to Sidekiq integration, you can send text messages in the background to speed things up, retry in case of failures or just to do it at specified time. To do so, first include the `Textris::Delay::Sidekiq` module in your texter:
 
 ```ruby
 class UserTexter < Textris::Base
@@ -84,7 +84,7 @@ UserTexter.delay_for(1.hour).welcome(user)
 UserTexter.delay_until(1.day.from_now).welcome(user)
 ```
 
-> Calling deliver is not needed in this case. It will be called in the *Textris::Delay::Sidekiq::Worker* worker.
+> You should not call `deliver` after the action invocation when using delay. It will be called by the *Textris::Delay::Sidekiq::Worker* worker.
 
 ## Testing
 
