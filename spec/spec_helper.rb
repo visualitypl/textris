@@ -1,11 +1,13 @@
 require 'simplecov'
 require 'scrutinizer/ocular'
-
-Scrutinizer::Ocular.watch!
+require "scrutinizer/ocular/formatter"
 
 if Scrutinizer::Ocular.should_run? || ENV["COVERAGE"]
   if Scrutinizer::Ocular.should_run?
-    SimpleCov.formatter = Scrutinizer::Ocular::UploadFormatter
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+      SimpleCov::Formatter::HTMLFormatter,
+      Scrutinizer::Ocular::UploadingFormatter
+    ]
   end
 
   SimpleCov.start do
