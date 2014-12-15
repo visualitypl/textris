@@ -38,6 +38,8 @@ GEM
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
     builder (3.2.2)
+    codeclimate-test-reporter (0.4.3)
+      simplecov (>= 0.7.1, < 1.0.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     erubis (2.7.0)
@@ -115,6 +117,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.6)
+  codeclimate-test-reporter (~> 0.4)
   rake (~> 10.0)
   rspec (~> 3.1)
   scrutinizer-ocular (~> 1.0)
