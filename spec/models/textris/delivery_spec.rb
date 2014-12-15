@@ -3,13 +3,25 @@ describe Textris::Delivery do
     before do
       Object.send(:remove_const, :Rails) if defined?(Rails)
 
+      class FakeEnv
+        attr_accessor :test
+
+        def initialize(options = {})
+          @test = options[:test]
+        end
+
+        def test?
+          @test
+        end
+      end
+
       Rails = OpenStruct.new(
         :application => OpenStruct.new(
           :config => OpenStruct.new(
             :textris_delivery_method => ['mail', 'test']
           )
         ),
-        :env => OpenStruct.new(
+        :env => FakeEnv.new(
           :test? => false
         )
       )
@@ -30,7 +42,7 @@ describe Textris::Delivery do
 
     it 'defaults to "test" method in test enviroment' do
       Rails.application.config.textris_delivery_method = nil
-      Rails.env['test?'] = true
+      Rails.env.test = true
 
       expect(Textris::Delivery.get).to eq([
         Textris::Delivery::Test])
@@ -38,7 +50,7 @@ describe Textris::Delivery do
 
     it 'defaults to "twilio" method in any other environment' do
       Rails.application.config.textris_delivery_method = nil
-      Rails.env['test?'] = false
+      Rails.env.test = false
 
       expect(Textris::Delivery.get).to eq([
         Textris::Delivery::Twilio])
