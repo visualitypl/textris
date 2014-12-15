@@ -2,6 +2,7 @@ require 'simplecov'
 require 'scrutinizer/ocular'
 require "scrutinizer/ocular/formatter"
 require "codeclimate-test-reporter"
+require "sidekiq/testing"
 
 CodeClimate::TestReporter.configuration.logger = Logger.new("/dev/null")
 
