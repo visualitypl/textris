@@ -1,3 +1,9 @@
+require 'simplecov'
+
+SimpleCov.start do
+  add_filter "/spec/"
+end if ENV["COVERAGE"]
+
 require_relative '../lib/textris'
 
 RSpec.configure do |config|

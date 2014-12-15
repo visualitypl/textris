@@ -1,9 +1,7 @@
-require 'spec_helper'
-
 describe Textris::Delivery::Test do
   let(:message) do
     Textris::Message.new(
-      :to      => '+48 600 700 800',
+      :to      => ['+48 600 700 800', '+48 100 200 300'],
       :content => 'Some text')
   end
 
@@ -14,6 +12,8 @@ describe Textris::Delivery::Test do
   it 'adds proper delievries to deliveries array' do
     Textris::Delivery::Test.send_message_to_all(message)
 
+    expect(Textris::Delivery::Test.deliveries.count).to eq 2
+
     last_message = Textris::Delivery::Test.deliveries.last
 
     expect(last_message).to be_present
@@ -22,7 +22,7 @@ describe Textris::Delivery::Test do
     expect(last_message.from_phone).to eq message.from_phone
     expect(last_message.texter).to eq message.texter
     expect(last_message.action).to eq message.action
-    expect(last_message.to).to eq message.to
+    expect(last_message.to[0]).to eq message.to[1]
   end
 
   it 'allows clearing messages array' do
