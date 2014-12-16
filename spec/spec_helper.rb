@@ -22,6 +22,7 @@ if Scrutinizer::Ocular.should_run? ||
   CodeClimate::TestReporter.configuration.logger = nil
 
   SimpleCov.start do
+    add_filter "/lib/textris.rb"
     add_filter "/spec/"
   end
 end

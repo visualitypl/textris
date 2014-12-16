@@ -6,9 +6,12 @@ begin
   require 'sidekiq'
 rescue LoadError
   require 'textris/delay/sidekiq/missing'
+
   Textris::Delay::Sidekiq.include(Textris::Delay::Sidekiq::Missing)
 else
   require 'textris/delay/sidekiq'
+  require 'textris/delay/sidekiq/proxy'
+  require 'textris/delay/sidekiq/worker'
 end
 
 require 'textris/base'
