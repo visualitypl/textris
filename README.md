@@ -151,18 +151,18 @@ Currently, **textris** comes with `twilio`, `mail` and `test` delivery methods b
 ```ruby
 class MyProviderDelivery < Textris::Delivery::Base
   # Implement sending message to single phone number
-  def self.send_message(phone, message)
-    some_send_method(:phone => phone, :text => message.content)
+  def deliver(phone)
+    send_sms(:phone => phone, :text => message.content)
   end
 
   # ...or implement sending message to multiple phone numbers at once
-  def self.send_message_to_all(message)
-    other_send_method(:phone_array => message.to, :text => message.content)
+  def deliver_to_all
+    send_multiple_sms(:phone_array => message.to, :text => message.content)
   end
 end
 ```
 
-Only one of methods above must be implemented for the delivery class to work. In case of multiple phone numbers and no implementation of *send_message_to_all*, the *send_message* method will be invoked multiple times.
+Only one of methods above must be implemented for the delivery class to work. In case of multiple phone numbers and no implementation of *deliver_to_all*, the *deliver* method will be invoked multiple times.
 
 > You can place your custom deliveries in `app/texters` or `app/models` instead of `app/deliveries` if you don't want to clutter the *app* directory too much.
 

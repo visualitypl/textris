@@ -5,12 +5,14 @@ describe Textris::Delivery::Test do
       :content => 'Some text')
   end
 
-  it 'responds to :send_message_to_all' do
-    expect(Textris::Delivery::Test).to respond_to(:send_message_to_all)
+  let(:delivery) { Textris::Delivery::Test.new(message) }
+
+  it 'responds to :deliver_to_all' do
+    expect(delivery).to respond_to(:deliver_to_all)
   end
 
   it 'adds proper delievries to deliveries array' do
-    Textris::Delivery::Test.send_message_to_all(message)
+    delivery.deliver_to_all
 
     expect(Textris::Delivery::Test.deliveries.count).to eq 2
 
@@ -26,7 +28,8 @@ describe Textris::Delivery::Test do
   end
 
   it 'allows clearing messages array' do
-    Textris::Delivery::Test.send_message_to_all(message)
+    delivery.deliver_to_all
+
     Textris::Delivery::Test.deliveries.clear
 
     expect(Textris::Delivery::Test.deliveries).to be_empty

@@ -1,21 +1,17 @@
-require 'twilio-ruby'
-
 module Textris
   module Delivery
     class Twilio < Textris::Delivery::Base
-      class << self
-        private
+      def deliver(to)
+        client.messages.create(
+          :from => message.from_phone,
+          :to   => to,
+          :body => message.content)
+      end
 
-        def send_message(to, message)
-          client.messages.create(
-            :from => message.from_phone,
-            :to   => to,
-            :body => message.content)
-        end
+      private
 
-        def client
-          @client ||= ::Twilio::REST::Client.new
-        end
+      def client
+        @client ||= ::Twilio::REST::Client.new
       end
     end
   end

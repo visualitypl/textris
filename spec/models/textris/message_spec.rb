@@ -118,12 +118,12 @@ describe Textris::Message do
 
   describe '#deliver' do
     before do
-      class XDelivery
-        def self.send_message_to_all(message); end
+      class XDelivery < Textris::Delivery::Base
+        def deliver(to); end
       end
 
-      class YDelivery
-        def self.send_message_to_all(message); end
+      class YDelivery < Textris::Delivery::Base
+        def deliver(to); end
       end
     end
 
@@ -136,8 +136,8 @@ describe Textris::Message do
         :from    => 'X',
         :to      => '+48 111 222 333')
 
-      expect(XDelivery).to receive(:send_message_to_all).with(message)
-      expect(YDelivery).to receive(:send_message_to_all).with(message)
+      expect_any_instance_of(XDelivery).to receive(:deliver_to_all)
+      expect_any_instance_of(YDelivery).to receive(:deliver_to_all)
 
       message.deliver
     end

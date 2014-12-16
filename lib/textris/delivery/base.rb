@@ -1,11 +1,15 @@
 module Textris
   module Delivery
     class Base
-      class << self
-        def send_message_to_all(message)
-          message.to.each do |to|
-            send_message(to, message)
-          end
+      attr_reader :message
+
+      def initialize(message)
+        @message = message
+      end
+
+      def deliver_to_all
+        message.to.each do |to|
+          deliver(to)
         end
       end
     end

@@ -7,89 +7,87 @@ module Textris
         end
       end
 
-      class << self
-        private
+      def deliver(to)
+        template_vars = { :to_phone => to }
 
-        def send_message(to, message)
-          template_vars = { :to_phone => to }
+        from    = apply_template from_template,    template_vars
+        to      = apply_template to_template,      template_vars
+        subject = apply_template subject_template, template_vars
+        body    = apply_template body_template,    template_vars
 
-          from    = apply_template from_template,    message, template_vars
-          to      = apply_template to_template,      message, template_vars
-          subject = apply_template subject_template, message, template_vars
-          body    = apply_template body_template,    message, template_vars
+        ::Textris::Delivery::Mail::Mailer.notify(
+          from, to, subject, body).deliver
+      end
 
-          ::Textris::Delivery::Mail::Mailer.notify(
-            from, to, subject, body).deliver
-        end
+      private
 
-        def from_template
-          Rails.application.config.try(:textris_mail_from_template) ||
-            "%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com"
-        end
+      def from_template
+        Rails.application.config.try(:textris_mail_from_template) ||
+          "%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com"
+      end
 
-        def to_template
-          Rails.application.config.try(:textris_mail_to_template) ||
-            "%{app:d}-%{env:d}-%{to_phone}-texts@mailinator.com"
-        end
+      def to_template
+        Rails.application.config.try(:textris_mail_to_template) ||
+          "%{app:d}-%{env:d}-%{to_phone}-texts@mailinator.com"
+      end
 
-        def subject_template
-          Rails.application.config.try(:textris_mail_subject_template) ||
-            "%{texter:dh} texter: %{action:h}"
-        end
+      def subject_template
+        Rails.application.config.try(:textris_mail_subject_template) ||
+          "%{texter:dh} texter: %{action:h}"
+      end
 
-        def body_template
-          Rails.application.config.try(:textris_mail_body_template) ||
-            "%{content}"
-        end
+      def body_template
+        Rails.application.config.try(:textris_mail_body_template) ||
+          "%{content}"
+      end
 
-        def apply_template(template, message, variables)
-          template.gsub(/\%\{[a-z_:]+\}/) do |match|
-            directive = match.gsub(/[%{}]/, '')
-            key       = directive.split(':').first
-            modifiers = directive.split(':')[1] || ''
+      def apply_template(template, variables)
+        template.gsub(/\%\{[a-z_:]+\}/) do |match|
+          directive = match.gsub(/[%{}]/, '')
+          key       = directive.split(':').first
+          modifiers = directive.split(':')[1] || ''
 
-            content = get_template_interpolation(key, message, variables)
-            content = apply_template_modifiers(content, modifiers.chars)
-            content = 'unknown' unless content.present?
-
-            content
-          end
-        end
-
-        def get_template_interpolation(key, message, variables)
-          content = case key
-          when 'app', 'env'
-            get_rails_variable(key)
-          when 'texter', 'action', 'from_name', 'from_phone', 'content'
-            message.send(key)
-          else
-            variables[key.to_sym]
-          end.to_s.strip
-        end
-
-        def get_rails_variable(var)
-          case var
-          when 'app'
-            Rails.application.class.parent_name
-          when 'env'
-            Rails.env
-          end
-        end
-
-        def apply_template_modifiers(content, modifiers)
-          modifiers.each do |modifier|
-            case modifier
-            when 'd'
-              content = content.underscore.dasherize
-            when 'h'
-              content = content.humanize.gsub(/[-_]/, ' ')
-            when 'p'
-              content = Phony.format(content) rescue content
-            end
-          end
+          content = get_template_interpolation(key, variables)
+          content = apply_template_modifiers(content, modifiers.chars)
+          content = 'unknown' unless content.present?
 
           content
         end
+      end
+
+      def get_template_interpolation(key, variables)
+        content = case key
+        when 'app', 'env'
+          get_rails_variable(key)
+        when 'texter', 'action', 'from_name', 'from_phone', 'content'
+          message.send(key)
+        else
+          variables[key.to_sym]
+        end.to_s.strip
+      end
+
+      def get_rails_variable(var)
+        case var
+        when 'app'
+          Rails.application.class.parent_name
+        when 'env'
+          Rails.env
+        end
+      end
+
+      def apply_template_modifiers(content, modifiers)
+        modifiers.each do |modifier|
+          case modifier
+          when 'd'
+            content = content.underscore.dasherize
+          when 'h'
+            content = content.humanize.gsub(/[-_]/, ' ')
+          when 'p'
+            content = Phony.format(content) rescue content
+          end
+        end
+
+        content
       end
     end
   end

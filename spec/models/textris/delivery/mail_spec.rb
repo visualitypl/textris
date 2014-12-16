@@ -8,6 +8,8 @@ describe Textris::Delivery::Mail do
       :action  => 'my_action')
   end
 
+  let(:delivery) { Textris::Delivery::Mail.new(message) }
+
   before do
     Object.send(:remove_const, :Rails) if defined?(Rails)
 
@@ -51,14 +53,14 @@ describe Textris::Delivery::Mail do
     end
   end
 
-  it 'responds to :send_message_to_all' do
-    expect(Textris::Delivery::Mail).to respond_to(:send_message_to_all)
+  it 'responds to :deliver_to_all' do
+    expect(delivery).to respond_to(:deliver_to_all)
   end
 
   it 'invokes ActionMailer for each recipient' do
     expect(Textris::Delivery::Mail::Mailer).to receive(:notify)
 
-    Textris::Delivery::Mail.send_message_to_all(message)
+    delivery.deliver_to_all
 
     expect(FakeMail.deliveries.count).to eq 2
   end
@@ -70,7 +72,7 @@ describe Textris::Delivery::Mail do
       :textris_mail_subject_template => 'c',
       :textris_mail_body_template    => 'd')
 
-    Textris::Delivery::Mail.send_message_to_all(message)
+    delivery.deliver_to_all
 
     expect(FakeMail.deliveries.last).to eq(
       :from    => 'a',
@@ -82,7 +84,7 @@ describe Textris::Delivery::Mail do
   it 'defines default templates' do
     Rails.application.config = OpenStruct.new
 
-    Textris::Delivery::Mail.send_message_to_all(message)
+    delivery.deliver_to_all
 
     expect(FakeMail.deliveries.last[:from]).to    be_present
     expect(FakeMail.deliveries.last[:to]).to      be_present
@@ -97,7 +99,7 @@ describe Textris::Delivery::Mail do
     Rails.application.config = OpenStruct.new(
       :textris_mail_to_template => interpolations.map { |i| "%{#{i}}" }.join('-'))
 
-    Textris::Delivery::Mail.send_message_to_all(message)
+    delivery.deliver_to_all
 
     expect(FakeMail.deliveries.last[:to].split('-')).to eq([
       'MyAppName', 'test', 'MyCute', 'my_action', 'Mr Jones', '48555666777', '48100200300', 'Some text'])
@@ -109,29 +111,33 @@ describe Textris::Delivery::Mail do
     Rails.application.config = OpenStruct.new(
       :textris_mail_to_template => interpolations.map { |i| "%{#{i}}" }.join('--'))
 
-    Textris::Delivery::Mail.send_message_to_all(message)
+    delivery.deliver_to_all
 
     expect(FakeMail.deliveries.last[:to].split('--')).to eq([
       'my-app-name', 'My cute', 'My action', '+48 55 566 67 77'])
   end
 
-  it 'applies all template interpolations properly when values missing' do
-    message = Textris::Message.new(
-      :to      => ['+48 600 700 800', '+48 100 200 300'],
-      :content => 'Some text')
+  context 'with incomplete message' do
+    let(:message) do
+      Textris::Message.new(
+        :to      => ['+48 600 700 800', '+48 100 200 300'],
+        :content => 'Some text')
+    end
 
-    interpolations = %w{app env texter action from_name
-      from_phone to_phone content}
+    it 'applies all template interpolations properly when values missing' do
+      interpolations = %w{app env texter action from_name
+        from_phone to_phone content}
 
-    Rails.env = nil
-    Rails.application = OpenStruct.new
-    Rails.application.config = OpenStruct.new(
-      :textris_mail_to_template => interpolations.map { |i| "%{#{i}}" }.join('-'))
+      Rails.env = nil
+      Rails.application = OpenStruct.new
+      Rails.application.config = OpenStruct.new(
+        :textris_mail_to_template => interpolations.map { |i| "%{#{i}}" }.join('-'))
 
-    Textris::Delivery::Mail.send_message_to_all(message)
+      delivery.deliver_to_all
 
-    expect(FakeMail.deliveries.last[:to].split('-')).to eq([
-      'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', '48100200300', 'Some text'])
+      expect(FakeMail.deliveries.last[:to].split('-')).to eq([
+        'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', '48100200300', 'Some text'])
+    end
   end
 end
 

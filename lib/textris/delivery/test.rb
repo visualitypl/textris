@@ -5,18 +5,16 @@ module Textris
         def deliveries
           @deliveries ||= []
         end
+      end
 
-        private
-
-        def send_message(to, message)
-          deliveries.push(::Textris::Message.new(
-            :content    => message.content,
-            :from_name  => message.from_name,
-            :from_phone => message.from_phone,
-            :texter     => message.texter,
-            :action     => message.action,
-            :to         => to))
-        end
+      def deliver(to)
+        self.class.deliveries.push(::Textris::Message.new(
+          :content    => message.content,
+          :from_name  => message.from_name,
+          :from_phone => message.from_phone,
+          :texter     => message.texter,
+          :action     => message.action,
+          :to         => to))
       end
     end
   end

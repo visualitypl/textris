@@ -5,6 +5,8 @@ describe Textris::Delivery::Twilio do
       :content => 'Some text')
   end
 
+  let(:delivery) { Textris::Delivery::Twilio.new(message) }
+
   before do
     class MessageArray
       def create(message)
@@ -24,8 +26,8 @@ describe Textris::Delivery::Twilio do
     end
   end
 
-  it 'responds to :send_message_to_all' do
-    expect(Textris::Delivery::Twilio).to respond_to(:send_message_to_all)
+  it 'responds to :deliver_to_all' do
+    expect(delivery).to respond_to(:deliver_to_all)
   end
 
   it 'invokes Twilio REST client for each recipient' do
@@ -34,6 +36,6 @@ describe Textris::Delivery::Twilio do
       expect(msg).to have_key(:body)
     end
 
-    Textris::Delivery::Twilio.send_message_to_all(message)
+    delivery.deliver_to_all
   end
 end
