@@ -2,7 +2,7 @@ module Textris
   module Delay
     module Sidekiq
       def delay
-        ::Textris::Delay::Sidekiq::Proxy.new(self)
+        ::Textris::Delay::Sidekiq::Proxy.new(self.to_s)
       end
 
       def delay_for(interval)
@@ -10,7 +10,7 @@ module Textris
           raise(ArgumentError, "Proper interval must be provided")
         end
 
-        ::Textris::Delay::Sidekiq::Proxy.new(self, :perform_in => interval)
+        ::Textris::Delay::Sidekiq::Proxy.new(self.to_s, :perform_in => interval)
       end
 
       def delay_until(timestamp)
@@ -18,7 +18,7 @@ module Textris
           raise(ArgumentError, "Proper timestamp must be provided")
         end
 
-        ::Textris::Delay::Sidekiq::Proxy.new(self, :perform_at => timestamp)
+        ::Textris::Delay::Sidekiq::Proxy.new(self.to_s, :perform_at => timestamp)
       end
     end
   end
