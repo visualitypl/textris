@@ -5,7 +5,6 @@ PATH
       actionmailer (~> 4.0)
       phony (~> 2.8)
       render_anywhere (~> 0.0)
-      twilio-ruby (~> 3.12)
 
 GEM
   remote: https://rubygems.org/
@@ -140,3 +139,4 @@ DEPENDENCIES
   scrutinizer-ocular (~> 1.0)
   simplecov (~> 0.9)
   textris!
+  twilio-ruby (~> 3.12)

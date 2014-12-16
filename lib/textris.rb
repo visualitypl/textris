@@ -3,6 +3,12 @@ require 'action_mailer'
 require 'phony'
 
 begin
+  require 'twilio-ruby'
+rescue LoadError
+  # no twilio-ruby
+end
+
+begin
   require 'sidekiq'
 rescue LoadError
   require 'textris/delay/sidekiq/missing'
