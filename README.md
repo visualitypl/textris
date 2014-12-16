@@ -12,7 +12,7 @@ Unlike similar gems, **textris** has some unique features:
 
 - e-mail proxy allowing to inspect messages using [Mailinator](https://mailinator.com/) or similar service
 - phone number E164 validation and normalization with the [phony](https://github.com/floere/phony) gem
-- built-in support for the Twilio API thanks to the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
+- built-in support for the Twilio API thanks to integration with the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
 - multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
 - background and scheduled texting thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
@@ -138,7 +138,13 @@ config.textris_delivery_method = [:mail, :test]
 
 #### Twilio
 
-In order to use Twilio with **textris**, you must pre-configure the *twilio-ruby* settings. Create the `config/initializers/twilio.rb`:
+**textris** connects with the Twilio API using *twilio-ruby* gem. It does not, however, install the gem for you. If you don't have it yet, add the *twilio-ruby* gem to `Gemfile`:
+
+```ruby
+gem 'twilio-ruby'
+```
+
+Then, pre-configure the *twilio-ruby* settings by creating the `config/initializers/twilio.rb` file:
 
 ```ruby
 Twilio.configure do |config|
