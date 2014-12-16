@@ -63,8 +63,8 @@ module Textris
 
     def parse_to(to)
       to = [*to]
-      to = to.select { |phone| Phony.plausible?(phone) }
-      to = to.map    { |phone| Phony.normalize(phone) }
+      to = to.select { |phone| Phony.plausible?(phone.to_s) }
+      to = to.map    { |phone| Phony.normalize(phone.to_s) }
 
       to
     end

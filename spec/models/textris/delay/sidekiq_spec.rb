@@ -4,7 +4,52 @@ describe Textris::Delay::Sidekiq do
       def delayed_action(phone, body)
         text :to => phone, :body => body
       end
+
+      def serialized_action(user)
+        text :to => user.id, :body => 'Hello'
+      end
+
+      def serialized_array_action(users)
+        text :to => users.first.id, :body => 'Hello all'
+      end
     end
+
+    module ActiveRecord
+      class RecordNotFound < Exception; end
+
+      class Base
+        attr_reader :id
+
+        def initialize(id)
+          @id = id
+        end
+
+        def self.find(id)
+          if id.is_a?(Array)
+            id.collect do |id|
+              id.to_i > 0 ? new(id) : raise(RecordNotFound)
+            end
+          else
+            id.to_i > 0 ? new(id) : raise(RecordNotFound)
+          end
+        end
+      end
+
+      class Relation
+        attr_reader :model, :items
+
+        delegate :map, :to => :items
+
+        def initialize(model, items)
+          @model = model
+          @items = items
+        end
+      end
+    end
+
+    class XModel    < ActiveRecord::Base; end
+    class YModel    < ActiveRecord::Base; end
+    class XRelation < ActiveRecord::Relation; end
   end
 
   context 'sidekiq gem present' do
@@ -17,6 +62,71 @@ describe Textris::Delay::Sidekiq do
         expect_any_instance_of(Textris::Message).to receive(:deliver)
 
         Textris::Delay::Sidekiq::Worker.drain
+      end
+
+      it 'serializes and deserializes ActiveRecord records' do
+        user = XModel.new('48666777888')
+
+        MyTexter.delay.serialized_action(user)
+
+        expect_any_instance_of(MyTexter).to receive(:text).with(
+          :to => "48666777888", :body => "Hello").and_call_original
+        expect_any_instance_of(Textris::Message).to receive(:deliver)
+
+        expect do
+          Textris::Delay::Sidekiq::Worker.drain
+        end.not_to raise_error
+      end
+
+      it 'serializes and deserializes ActiveRecord relations' do
+        users = XRelation.new(XModel, [XModel.new('48666777888'), XModel.new('48666777889')])
+
+        MyTexter.delay.serialized_array_action(users)
+
+        expect_any_instance_of(MyTexter).to receive(:text).with(
+          :to => "48666777888", :body => "Hello all").and_call_original
+        expect_any_instance_of(Textris::Message).to receive(:deliver)
+
+        expect do
+          Textris::Delay::Sidekiq::Worker.drain
+        end.not_to raise_error
+      end
+
+      it 'serializes and deserializes ActiveRecord object arrays' do
+        users = [XModel.new('48666777888'), XModel.new('48666777889')]
+
+        MyTexter.delay.serialized_array_action(users)
+
+        expect_any_instance_of(MyTexter).to receive(:text).with(
+          :to => "48666777888", :body => "Hello all").and_call_original
+        expect_any_instance_of(Textris::Message).to receive(:deliver)
+
+        expect do
+          Textris::Delay::Sidekiq::Worker.drain
+        end.not_to raise_error
+      end
+
+      it 'does not serialize wrong ActiveRecord object arrays' do
+        users = [XModel.new('48666777888'), YModel.new('48666777889')]
+
+        MyTexter.delay.serialized_array_action(users)
+
+        expect do
+          Textris::Delay::Sidekiq::Worker.drain
+        end.to raise_error(NoMethodError)
+      end
+
+      it 'does not raise when ActiveRecord not loaded' do
+        Object.send(:remove_const, :XModel)
+        Object.send(:remove_const, :YModel)
+        Object.send(:remove_const, :XRelation)
+        Object.send(:remove_const, :ActiveRecord)
+
+        MyTexter.delay.serialized_array_action('x')
+
+        expect do
+          Textris::Delay::Sidekiq::Worker.drain
+        end.to raise_error(NoMethodError)
       end
     end
 

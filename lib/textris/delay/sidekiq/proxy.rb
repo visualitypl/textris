@@ -9,6 +9,7 @@ module Textris
         end
 
         def method_missing(method_name, *args)
+          args = ::Textris::Delay::Sidekiq::Serializer.serialize(args)
           args = [@texter, method_name, args]
 
           if @perform_in

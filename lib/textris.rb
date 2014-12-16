@@ -5,7 +5,6 @@ require 'phony'
 begin
   require 'twilio-ruby'
 rescue LoadError
-  # no twilio-ruby
 end
 
 begin
@@ -17,6 +16,7 @@ rescue LoadError
 else
   require 'textris/delay/sidekiq'
   require 'textris/delay/sidekiq/proxy'
+  require 'textris/delay/sidekiq/serializer'
   require 'textris/delay/sidekiq/worker'
 end
 
