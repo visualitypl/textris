@@ -1,5 +1,6 @@
 # textris
 
+[![GitHub version](https://badge.fury.io/gh/visualitypl%2Ftextris.svg)](http://badge.fury.io/gh/visualitypl%2Ftextris)
 [![Build Status](https://scrutinizer-ci.com/g/visualitypl/textris/badges/build.png?b=master)](https://scrutinizer-ci.com/g/visualitypl/textris/build-status/master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/visualitypl/textris/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/visualitypl/textris/?branch=master)
 [![Code Climate](https://codeclimate.com/github/visualitypl/textris/badges/gpa.svg)](https://codeclimate.com/github/visualitypl/textris)
