@@ -24,6 +24,7 @@ if Scrutinizer::Ocular.should_run? ||
   SimpleCov.start do
     add_filter "/lib/textris.rb"
     add_filter "/spec/"
+    add_filter "vendor"
   end
 end
 
