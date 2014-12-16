@@ -74,6 +74,8 @@ UserTexter.delay_until(1.day.from_now).welcome(user)
 
 > You should not call `deliver` after the action invocation when using delay. It will be called by the *Textris::Delay::Sidekiq::Worker* worker.
 
+> You can safely pass ActiveRecord records and arrays as delayed action arguments. **textris** will store their `id`'s and find them upon scheduled delivery.
+
 Keep in mind that **textris** does not install *sidekiq* for you. If you don't have it yet, [install Redis](http://redis.io/topics/quickstart) on your machine and add the *sidekiq* gem to `Gemfile`:
 
 ```ruby
