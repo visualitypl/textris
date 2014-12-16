@@ -1,5 +1,3 @@
-require 'sidekiq'
-
 module Textris
   module Delay
     module Sidekiq
@@ -16,13 +14,13 @@ module Textris
       end
 
       class Proxy
+        private
+
         def initialize(texter, options = {})
           @texter     = texter
           @perform_in = options[:perform_in]
           @perform_at = options[:perform_at]
         end
-
-        private
 
         def method_missing(method_name, *args)
           args = [@texter, method_name, args]
@@ -34,12 +32,6 @@ module Textris
           else
             ::Textris::Delay::Sidekiq::Worker.perform_async(*args)
           end
-        end
-      end
-
-      class << self
-        def included(base)
-          base.extend(self)
         end
       end
 
@@ -65,3 +57,5 @@ module Textris
     end
   end
 end
+
+

@@ -3,20 +3,20 @@ require 'scrutinizer/ocular'
 require "scrutinizer/ocular/formatter"
 require "codeclimate-test-reporter"
 require "sidekiq/testing"
+require 'textris/delay/sidekiq/missing'
 
 CodeClimate::TestReporter.configuration.logger = Logger.new("/dev/null")
 
-if Scrutinizer::Ocular.should_run? || CodeClimate::TestReporter.run? || ENV["COVERAGE"]
+if Scrutinizer::Ocular.should_run? ||
+    CodeClimate::TestReporter.run? ||
+    ENV["COVERAGE"]
   formatters = [SimpleCov::Formatter::HTMLFormatter]
-
   if Scrutinizer::Ocular.should_run?
     formatters << Scrutinizer::Ocular::UploadingFormatter
   end
-
   if CodeClimate::TestReporter.run?
     formatters << CodeClimate::TestReporter::Formatter
   end
-
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
 
   CodeClimate::TestReporter.configuration.logger = nil

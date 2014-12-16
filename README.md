@@ -14,7 +14,7 @@ Unlike similar gems, **textris** has some unique features:
 - built-in support for the Twilio API thanks to the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
 - multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
-- background and scheduled processing thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
+- background and scheduled texting thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
 - support for testing using self-explanatory `Textris::Base.deliveries`
 - simple, extensible, fully tested code written from the ground up instead of copying *ActionMailer*
 
@@ -62,21 +62,9 @@ class User < ActiveRecord::Base
 end
 ```
 
-### Background and scheduled processing
+### Background and scheduled
 
-Thanks to Sidekiq integration, you can send text messages in the background to speed things up, retry in case of failures or just to do it at specified time. To do so, first include the `Textris::Delay::Sidekiq` module in your texter:
-
-```ruby
-class UserTexter < Textris::Base
-  include Textris::Delay::Sidekiq
-
-  def welcome(user)
-    # ...
-  end
-end
-```
-
-Then use one of three delay methods.
+Thanks to Sidekiq integration, you can send text messages in the background to speed things up, retry in case of failures or just to do it at specific time. To do so, use one of three delay methods:
 
 ```ruby
 UserTexter.delay.welcome(user)
@@ -85,6 +73,17 @@ UserTexter.delay_until(1.day.from_now).welcome(user)
 ```
 
 > You should not call `deliver` after the action invocation when using delay. It will be called by the *Textris::Delay::Sidekiq::Worker* worker.
+
+Keep in mind that **textris** does not install *sidekiq* for you. If you don't have it yet, add the *sidekiq* gem to `Gemfile`:
+
+```ruby
+gem 'sidekiq'
+```
+
+Then run:
+
+    bundle install
+    bundle exec sidekiq
 
 ## Testing
 
@@ -147,7 +146,7 @@ end
 
 #### Custom delivery methods
 
-Currently, **textris** comes with `twilio`, `test` and `mail` delivery methods built-in, but you can easily implement your own. Place desired delivery class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
+Currently, **textris** comes with `twilio`, `mail` and `test` delivery methods built-in, but you can easily implement your own. Place desired delivery class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
 
 ```ruby
 class MyProviderDelivery < Textris::Delivery::Base
@@ -165,7 +164,7 @@ end
 
 Only one of methods above must be implemented for the delivery class to work. In case of multiple phone numbers and no implementation of *send_message_to_all*, the *send_message* method will be invoked multiple times.
 
-> You can place your custom deliveries in `app/texters` instead of `app/deliveries` if you don't want to clutter the *app* directory too much.
+> You can place your custom deliveries in `app/texters` or `app/models` instead of `app/deliveries` if you don't want to clutter the *app* directory too much.
 
 After implementing your own deliveries, you can activate them by setting app configuration:
 

@@ -9,6 +9,7 @@ module Textris
     end
 
     include RenderAnywhere
+    extend Textris::Delay::Sidekiq
 
     class << self
       def deliveries

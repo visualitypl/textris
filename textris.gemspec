@@ -33,5 +33,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'render_anywhere', '~> 0.0'
   spec.add_runtime_dependency 'twilio-ruby',     '~> 3.12'
   spec.add_runtime_dependency 'phony',           '~> 2.8'
-  spec.add_runtime_dependency 'sidekiq',         '~> 3.2'
 end
