@@ -10,6 +10,7 @@ module Textris
             objects.collect do |object|
               serialize_active_record_object(object) ||
                 serialize_active_record_array(object) ||
+                serialize_active_record_relation(object) ||
                 object
             end
           rescue NameError
@@ -19,7 +20,6 @@ module Textris
           def deserialize(objects)
             objects.collect do |object|
               deserialize_active_record_object(object) ||
-                deserialize_active_record_array(object) ||
                 object
             end
           end
@@ -32,27 +32,24 @@ module Textris
             end
           end
 
-          def deserialize_active_record_object(object)
-            if object.is_a?(Array) &&
-                object.try(:length) == 3 &&
-                object[0] == ACTIVERECORD_POINTER
-              object[1].constantize.find(object[2])
+          def serialize_active_record_relation(array)
+            if array.class < ActiveRecord::Relation
+              [ACTIVERECORD_ARRAY_POINTER, array.model.to_s, array.map(&:id)]
             end
           end
 
           def serialize_active_record_array(array)
-            if array.class < ActiveRecord::Relation
-              [ACTIVERECORD_ARRAY_POINTER, array.model.to_s, array.map(&:id)]
-            elsif array.is_a?(Array) &&
+            if array.is_a?(Array) &&
                 (model = get_active_record_common_model(array))
               [ACTIVERECORD_ARRAY_POINTER, model, array.map(&:id)]
             end
           end
 
-          def deserialize_active_record_array(object)
+          def deserialize_active_record_object(object)
             if object.is_a?(Array) &&
                 object.try(:length) == 3 &&
-                object[0] == ACTIVERECORD_ARRAY_POINTER
+                [ACTIVERECORD_POINTER,
+                 ACTIVERECORD_ARRAY_POINTER].include?(object[0])
               object[1].constantize.find(object[2])
             end
           end
