@@ -56,7 +56,7 @@ module Textris
       end
 
       def get_template_interpolation(key, variables)
-        content = case key
+        case key
         when 'app', 'env'
           get_rails_variable(key)
         when 'texter', 'action', 'from_name', 'from_phone', 'content'
