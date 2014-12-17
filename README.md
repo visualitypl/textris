@@ -231,3 +231,14 @@ You can add optional interpolation modifiers using the `%{variable:modifiers}` s
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+### Adding delivery methods
+
+Implementing new delivery methods in Pull Requests is strongly encouraged. Start by [implementing custom delivery method](#custom-delivery-methods). Then, you can prepare it for a Pull Request by adhering to following guidelines:
+
+1. Delivery class should be placed in `lib/textris/delivery/service_name.rb` and named in a way that will best indicate the service with which it's supposed to work with.
+5. Add your method to code example in [Choosing and chaining delivery methods](#choosing-and-chaining-delivery-methods) in README. Also, add sub-chapter for it if it depends on other gems or requires explanation.
+6. Your delivery code is expected to throw exceptions with self-explanatory messages upon failure. Include specs that test this. Mock external API requests with [webmock](https://github.com/bblimke/webmock).
+2. If delivery depends on any gems, don't add them as runtime dependencies. You can (and should in order to write complete specs) add them as development dependencies.
+3. Delivery code must load without exceptions even when dependent libraries are missing. Specs should test such case (you can use `remove_const` to undefine loaded consts).
+4. New deliveries are expected to have 100% test coverage. Run `COVERAGE=1 bundle exec rake spec` to generate *simplecov* coverage into the **coverage/index.html** file.
