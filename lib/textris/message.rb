@@ -40,6 +40,16 @@ module Textris
       end
     end
 
+    def from
+      if @from_name.present? && @from_phone.present?
+        "#{@from_name} <#{Phony.format(@from_phone)}>"
+      elsif @from_name.present?
+        @from_name
+      elsif @from_phone.present?
+        Phony.format(@from_phone)
+      end
+    end
+
     private
 
     def parse_from(from)
