@@ -6,10 +6,12 @@ module Textris
       methods = Rails.application.config.try(:textris_delivery_method)
       methods = [*methods].compact
       if methods.blank?
-        if Rails.env.test?
+        if Rails.env.development?
+          methods = [:log]
+        elsif Rails.env.test?
           methods = [:test]
         else
-          methods = [:twilio]
+          methods = [:mail]
         end
       end
 

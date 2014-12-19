@@ -4,14 +4,35 @@ describe Textris::Delivery do
       Object.send(:remove_const, :Rails) if defined?(Rails)
 
       class FakeEnv
-        attr_accessor :test
-
         def initialize(options = {})
-          @test = options[:test]
+          self.name = 'development'
+        end
+
+        def name=(value)
+          @development = false
+          @test        = false
+          @production  = false
+
+          case value.to_s
+          when 'development'
+            @development = true
+          when 'test'
+            @test = true
+          when 'production'
+            @production = true
+          end
+        end
+
+        def development?
+          @development
         end
 
         def test?
           @test
+        end
+
+        def production?
+          @production
         end
       end
 
@@ -40,20 +61,28 @@ describe Textris::Delivery do
         Textris::Delivery::Mail])
     end
 
+    it 'defaults to "log" method in development environment' do
+      Rails.application.config.textris_delivery_method = nil
+      Rails.env.name = 'development'
+
+      expect(Textris::Delivery.get).to eq([
+        Textris::Delivery::Log])
+    end
+
     it 'defaults to "test" method in test enviroment' do
       Rails.application.config.textris_delivery_method = nil
-      Rails.env.test = true
+      Rails.env.name = 'test'
 
       expect(Textris::Delivery.get).to eq([
         Textris::Delivery::Test])
     end
 
-    it 'defaults to "twilio" method in any other environment' do
+    it 'defaults to "mail" method in production enviroment' do
       Rails.application.config.textris_delivery_method = nil
-      Rails.env.test = false
+      Rails.env.name = 'production'
 
       expect(Textris::Delivery.get).to eq([
-        Textris::Delivery::Twilio])
+        Textris::Delivery::Mail])
     end
   end
 end

@@ -137,7 +137,7 @@ config.textris_delivery_method = :mail
 config.textris_delivery_method = [:mail, :test]
 ```
 
-> Unless otherwise configured, *Twilio* will be the default delivery method in `development` and `production` environments, while the *test* method will be used in `test` environment by default.
+> Unless otherwise configured, default delivery methods will be: *log* in `development` environment, *test* in `test` environment and *mail* in `production` environment. All these come with reasonable defaults and will work with no further configuration.
 
 #### Twilio
 
