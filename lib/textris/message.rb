@@ -41,12 +41,14 @@ module Textris
     end
 
     def from
-      if @from_name.present? && @from_phone.present?
-        "#{@from_name} <#{Phony.format(@from_phone)}>"
+      if @from_phone.present?
+        if @from_name.present?
+          "#{@from_name} <#{Phony.format(@from_phone)}>"
+        else
+          Phony.format(@from_phone)
+        end
       elsif @from_name.present?
         @from_name
-      elsif @from_phone.present?
-        Phony.format(@from_phone)
       end
     end
 
