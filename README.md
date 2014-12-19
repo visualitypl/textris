@@ -124,6 +124,9 @@ Below you'll find sample settings for any of supported delivery methods along wi
 # Send messages via the Twilio REST API
 config.textris_delivery_method = :twilio
 
+# Don't send anything, log messages into Rails logger
+config.textris_delivery_method = :log
+
 # Don't send anything, access your messages via Textris::Base.deliveries
 config.textris_delivery_method = :test
 
@@ -151,6 +154,14 @@ Twilio.configure do |config|
   config.account_sid = 'some_sid'
   config.auth_token  = 'some_auth_token'
 end
+```
+
+#### Log
+
+**textris** logger has similar logging behavior to ActionMailer. It will log single line to *info* log with production in mind and then a couple details to *debug* log. You can change the log level for the whole output:
+
+```ruby
+config.textris_log_level = :info
 ```
 
 #### Custom delivery methods
