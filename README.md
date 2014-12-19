@@ -133,8 +133,8 @@ config.textris_delivery_method = :test
 # Send e-mails instead of SMSes in order to inspect their content
 config.textris_delivery_method = :mail
 
-# Chain multiple delivery methods (e.g. to have e-mail backups of your messages)
-config.textris_delivery_method = [:mail, :test]
+# Chain multiple delivery methods (e.g. to have e-mail and log backups of messages)
+config.textris_delivery_method = [:twilio, :mail, :log]
 ```
 
 > Unless otherwise configured, default delivery methods will be: *log* in `development` environment, *test* in `test` environment and *mail* in `production` environment. All these come with reasonable defaults and will work with no further configuration.
@@ -253,3 +253,5 @@ Implementing new delivery methods in Pull Requests is strongly encouraged. Start
 2. If delivery depends on any gems, don't add them as runtime dependencies. You can (and should in order to write complete specs) add them as development dependencies.
 3. Delivery code must load without exceptions even when dependent libraries are missing. Specs should test such case (you can use `remove_const` to undefine loaded consts).
 4. New deliveries are expected to have 100% test coverage. Run `COVERAGE=1 bundle exec rake spec` to generate *simplecov* coverage into the **coverage/index.html** file.
+
+The commit in which [the log delivery was added](https://github.com/visualitypl/textris/commit/7c3231ca5eeb94cca01a3beced19a1a909299faf) is an example of delivery method addition that meets all guidelines listed above.
