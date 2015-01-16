@@ -156,6 +156,16 @@ Twilio.configure do |config|
 end
 ```
 
+#### Nexmo
+
+In order to use Nexmo with **textris**, you need to include the `nexmo` gem in your `Gemfile`:
+
+```ruby
+gem 'nexmo'
+```
+
+The Nexmo gem uses the environment variables `NEXMO_API_KEY` and `NEXMO_API_SECRET` to authenticate with the API.
+Therefore the safest way to provide authentication credentials is to set these variables in your application environment.
 #### Log
 
 **textris** logger has similar logging behavior to ActionMailer. It will log single line to *info* log with production in mind and then a couple details to *debug* log. You can change the log level for the whole output:
