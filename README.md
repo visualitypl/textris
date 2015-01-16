@@ -19,6 +19,8 @@ Unlike similar gems, **textris** has some unique features:
 - support for testing using self-explanatory `Textris::Base.deliveries`
 - simple, extensible, fully tested code written from the ground up instead of copying *ActionMailer*
 
+See the [blog entry](http://www.visuality.pl/posts/txt-messaging-with-textris-gem) for the whole story and a practical usage example.
+
 ## Installation
 
 Add to `Gemfile`:
