@@ -12,7 +12,7 @@ Unlike similar gems, **textris** has some unique features:
 
 - e-mail proxy allowing to inspect messages using [Mailinator](https://mailinator.com/) or similar service
 - phone number E164 validation and normalization with the [phony](https://github.com/floere/phony) gem
-- built-in support for the Twilio API thanks to integration with the [twilio-ruby](https://github.com/twilio/twilio-ruby) gem
+- built-in support for the Twilio and Nexmo APIs with [twilio-ruby](https://github.com/twilio/twilio-ruby) and [nexmo](https://github.com/timcraft/nexmo) gems
 - multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
 - background and scheduled texting thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
@@ -126,6 +126,9 @@ Below you'll find sample settings for any of supported delivery methods along wi
 # Send messages via the Twilio REST API
 config.textris_delivery_method = :twilio
 
+# Send messages via the Nexmo API
+config.textris_delivery_method = :nexmo
+
 # Don't send anything, log messages into Rails logger
 config.textris_delivery_method = :log
 
@@ -158,6 +161,17 @@ Twilio.configure do |config|
 end
 ```
 
+#### Nexmo
+
+In order to use Nexmo with **textris**, you need to include the `nexmo` gem in your `Gemfile`:
+
+```ruby
+gem 'nexmo'
+```
+
+The Nexmo gem uses the environment variables `NEXMO_API_KEY` and `NEXMO_API_SECRET` to authenticate with the API.
+Therefore the safest way to provide authentication credentials is to set these variables in your application environment.
+
 #### Log
 
 **textris** logger has similar logging behavior to ActionMailer. It will log single line to *info* log with production in mind and then a couple details to *debug* log. You can change the log level for the whole output:
@@ -168,7 +182,7 @@ config.textris_log_level = :info
 
 #### Custom delivery methods
 
-Currently, **textris** comes with `twilio`, `mail` and `test` delivery methods built-in, but you can easily implement your own. Place desired delivery class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
+Currently, **textris** comes with several delivery methods built-in, but you can easily implement your own. Place desired delivery class in `app/deliveries/<name>_delivery.rb` (e.g. `app/deliveries/my_provider_delivery.rb`):
 
 ```ruby
 class MyProviderDelivery < Textris::Delivery::Base
