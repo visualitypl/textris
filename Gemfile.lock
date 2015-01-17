@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    textris (0.3.1)
+    textris (0.3.2)
       actionmailer (~> 4.0)
       phony (~> 2.8)
       render_anywhere (~> 0.0)
@@ -46,7 +46,7 @@ GEM
     docile (1.1.5)
     erubis (2.7.0)
     hike (1.2.3)
-    i18n (0.6.11)
+    i18n (0.7.0)
     json (1.8.1)
     jwt (1.0.0)
     mail (2.6.3)
