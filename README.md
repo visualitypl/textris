@@ -1,10 +1,11 @@
 # textris
 
-[![GitHub version](https://badge.fury.io/gh/visualitypl%2Ftextris.svg)](http://badge.fury.io/gh/visualitypl%2Ftextris)
-[![Build Status](https://scrutinizer-ci.com/g/visualitypl/textris/badges/build.png?b=master)](https://scrutinizer-ci.com/g/visualitypl/textris/build-status/master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/visualitypl/textris/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/visualitypl/textris/?branch=master)
-[![Code Climate](https://codeclimate.com/github/visualitypl/textris/badges/gpa.svg)](https://codeclimate.com/github/visualitypl/textris)
-[![Test Coverage](https://codeclimate.com/github/visualitypl/textris/badges/coverage.svg)](https://codeclimate.com/github/visualitypl/textris)
+[![Gem Version](https://img.shields.io/gem/v/textris.svg?style=flat-square&label=version)](https://rubygems.org/gems/textris)
+[![Downloads](https://img.shields.io/gem/dt/textris.svg?style=flat-square)](https://rubygems.org/gems/textris)
+[![Build Status](https://img.shields.io/circleci/project/visualitypl/textris/master.svg?style=flat-square&label=build)](https://circleci.com/gh/visualitypl/textris/tree/master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/visualitypl/textris.svg?style=flat-square)](https://scrutinizer-ci.com/g/visualitypl/textris/?branch=master)
+[![Code Climate](https://img.shields.io/codeclimate/github/visualitypl/textris.svg?style=flat-square)](https://codeclimate.com/github/visualitypl/textris)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/github/visualitypl/textris.svg?style=flat-square)](https://codeclimate.com/github/visualitypl/textris)
 
 Simple gem for implementing texter classes which allow sending SMS messages in similar way to how e-mails are implemented and sent with ActionMailer-based mailers.
 
