@@ -71,7 +71,7 @@ end
 
 #### ActiveJob integration
 
-As of version 0.4, **textris** supports native Rails 4.2+ way of background job handling, the [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html). You can delay delivery of your texters the same way you would do so with ActionMailer mailers. For example:
+As of version 0.4, **textris** supports native Rails 4.2+ way of background job handling, the [ActiveJob](http://edgeguides.rubyonrails.org/active_job_basics.html). You can delay delivery of your texters the same way as with ActionMailer mailers, like:
 
 ```ruby
 UserTexter.welcome(user).deliver_later
@@ -83,9 +83,11 @@ UserTexter.welcome(user).deliver_now
 
 > You can safely pass ActiveRecord records as delayed action arguments. ActiveJob uses [GlobalID](https://github.com/rails/activemodel-globalid/) to serialize them for scheduled delivery.
 
+By default, `textris` queue will be used by the *Textris::Delay::ActiveJob::Job* job.
+
 #### Direct Sidekiq integration
 
-> As of Rails 4.2, the ActiveJob is the recommended way for background job handling and it does support Sidekiq as its backend, so please see chapter above if you're using Rails 4.2 or above. Otherwise, keep on reading to use textris with Sidekiq regardless of your Rails version.
+> As of Rails 4.2, ActiveJob is the recommended way for background job handling and it does support Sidekiq as its backend, so please see [chapter above](#activejob-integration) if you're using Rails 4.2 or above. Otherwise, keep on reading to use textris with Sidekiq regardless of your Rails version.
 
 Thanks to Sidekiq integration, you can send text messages in the background to speed things up, retry in case of failures or just to do it at specific time. To do so, use one of three delay methods:
 
@@ -95,7 +97,7 @@ UserTexter.delay_for(1.hour).welcome(user)
 UserTexter.delay_until(1.day.from_now).welcome(user)
 ```
 
-> You should not call `deliver` after the action invocation when using delay. It will be called by the *Textris::Delay::Sidekiq::Worker* worker.
+Remember not to call `deliver` after the action invocation when using delay. It will be called by the *Textris::Delay::Sidekiq::Worker* worker.
 
 > You can safely pass ActiveRecord records and arrays as delayed action arguments. **textris** will store their `id`s and find them upon scheduled delivery.
 
