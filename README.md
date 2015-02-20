@@ -273,7 +273,7 @@ You can add optional interpolation modifiers using the `%{variable:modifiers}` s
 
 ## Example project
 
-[Here](https://github.com/visualitypl/textris/tree/master/example/rails-4.2) you can find a simple example project that demonstrates **textris** usage with Rails 4.2, as [described above](#usage). In order to see how it works or experiment with it, just go to project's directory and invoke:
+[Here](https://github.com/visualitypl/textris/tree/master/example/rails-4.2) you can find a simple example project that demonstrates **textris** usage with Rails 4.2. In order to see how it works or experiment with it, just go to project's directory and invoke:
 
 ```
 bundle install
@@ -281,7 +281,7 @@ rake db:migrate
 rails server
 ```
 
-Open [application page](http://localhost:3000/) and fill in some user information. Sample texter will be invoked and you'll see similar output in your server log:
+Open [application page](http://localhost:3000/) and fill in some user information. Sample texter will be invoked and you'll see an output similar to following in your server log:
 
 ```
 [ActiveJob] Enqueued Textris::Delay::ActiveJob::Job (Job ID: 71ed54f7-02e8-4205-9093-6f2a0ff7f483) to Inline(textris) with arguments: "UserTexter", "welcome", [#<User id: 1, name: "Mr Jones", phone: "48666777888", created_at: "2015-02-20 17:17:16", updated_at: "2015-02-20 17:17:16">]
@@ -297,7 +297,7 @@ Open [application page](http://localhost:3000/) and fill in some user informatio
 [ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Performed Textris::Delay::ActiveJob::Job from Inline(textris) in 9.98ms
 ```
 
-Example project may serve as a convenient sandbox for [developing custom delivery methods](#custom-delivery-methods) or even [submitting them to textris repo](#adding-delivery-methods).
+Example project may serve as a convenient sandbox for [developing custom delivery methods](#custom-delivery-methods).
 
 ## Contributing
 
