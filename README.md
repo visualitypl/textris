@@ -16,7 +16,8 @@ Unlike similar gems, **textris** has some unique features:
 - built-in support for the Twilio and Nexmo APIs with [twilio-ruby](https://github.com/twilio/twilio-ruby) and [nexmo](https://github.com/timcraft/nexmo) gems
 - multiple, per-environment configurable and chainable delivery methods
 - extensible with any number of custom delivery methods (also chainable)
-- background and scheduled texting thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
+- background and scheduled texting for Rails 4.2+ thanks to integration with [ActiveJob](https://github.com/rails/activejob/tree/archive)
+- background and scheduled texting for Rails older than 4.2 thanks to integration with the [sidekiq](https://github.com/mperham/sidekiq) gem
 - support for testing using self-explanatory `Textris::Base.deliveries`
 - simple, extensible, fully tested code written from the ground up instead of copying *ActionMailer*
 
@@ -67,6 +68,24 @@ end
 ```
 
 ### Background and scheduled
+
+#### ActiveJob integration
+
+As of version 0.4, **textris** supports native Rails 4.2+ way of background job handling, the [ActiveJob](https://github.com/rails/activejob/tree/archive). You can delay delivery of your texters the same way you would do so with ActionMailer mailers. For example:
+
+```ruby
+UserTexter.welcome(user).deliver_later
+UserTexter.welcome(user).deliver_later(:wait => 1.hour)
+UserTexter.welcome(user).deliver_later(:wait_until => 1.day.from_now)
+UserTexter.welcome(user).deliver_later(:queue => :custom_queue)
+UserTexter.welcome(user).deliver_now
+```
+
+> You can safely pass ActiveRecord records as delayed action arguments. ActiveJob uses [GlobalID](https://github.com/rails/activemodel-globalid/) to serialize them for scheduled delivery.
+
+#### Direct Sidekiq integration
+
+> As of Rails 4.2, the ActiveJob is the recommended way for background job handling and it does support Sidekiq as its backend, so please see chapter above if you're using Rails 4.2 or above. Otherwise, keep on reading to use textris with Sidekiq regardless of your Rails version.
 
 Thanks to Sidekiq integration, you can send text messages in the background to speed things up, retry in case of failures or just to do it at specific time. To do so, use one of three delay methods:
 
