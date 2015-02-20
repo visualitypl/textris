@@ -3,24 +3,9 @@ module Textris
     attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args
 
     def initialize(options = {})
-      @to       = parse_to      options[:to]
-      @content  = parse_content options[:content] if options[:content].present?
-      @renderer = options[:renderer]
-
-      if options.has_key?(:from)
-        @from_name, @from_phone = parse_from options[:from]
-      else
-        @from_name  = options[:from_name]
-        @from_phone = options[:from_phone]
-      end
-
-      unless @content.present? || @renderer.respond_to?(:render)
-        raise(ArgumentError, "Content must be provided")
-      end
-
-      unless @to.present?
-        raise(ArgumentError, "Recipients must be provided and E.164 compilant")
-      end
+      initialize_content(options)
+      initialize_author(options)
+      initialize_recipients(options)
 
       @texter = options[:texter]
       @action = options[:action]
@@ -57,10 +42,37 @@ module Textris
     end
 
     def content
-      @content ||= @renderer.render_content
+      @content ||= parse_content(@renderer.render_content)
     end
 
     private
+
+    def initialize_content(options)
+      if options[:content].present?
+        @content  = parse_content options[:content]
+      elsif options[:renderer].present?
+        @renderer = options[:renderer]
+      else
+        raise(ArgumentError, "Content must be provided")
+      end
+    end
+
+    def initialize_author(options)
+      if options.has_key?(:from)
+        @from_name, @from_phone = parse_from options[:from]
+      else
+        @from_name  = options[:from_name]
+        @from_phone = options[:from_phone]
+      end
+    end
+
+    def initialize_recipients(options)
+      @to = parse_to options[:to]
+
+      unless @to.present?
+        raise(ArgumentError, "Recipients must be provided and E.164 compilant")
+      end
+    end
 
     def parse_from(from)
       parse_from_dual(from) || parse_from_singular(from)
