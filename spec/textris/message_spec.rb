@@ -142,4 +142,31 @@ describe Textris::Message do
       message.deliver
     end
   end
+
+  describe '#deliver_now' do
+    before do
+      class XDelivery < Textris::Delivery::Base
+        def deliver(to); end
+      end
+
+      class YDelivery < Textris::Delivery::Base
+        def deliver(to); end
+      end
+    end
+
+    it 'works the same as #deliver' do
+      expect(Textris::Delivery).to receive(:get).
+        and_return([XDelivery, YDelivery])
+
+      message = Textris::Message.new(
+        :content => 'X',
+        :from    => 'X',
+        :to      => '+48 111 222 333')
+
+      expect_any_instance_of(XDelivery).to receive(:deliver_to_all)
+      expect_any_instance_of(YDelivery).to receive(:deliver_to_all)
+
+      message.deliver_now
+    end
+  end
 end

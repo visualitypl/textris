@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
   end
 
   after_create do
-    UserTexter.welcome(self).deliver
+    ## this would deliver text in synchronous way
+    UserTexter.welcome(self).deliver_now
+
+    ## ...so let's use shiny new ActiveJob instead
+    # UserTexter.welcome(self).deliver_later
   end
 end

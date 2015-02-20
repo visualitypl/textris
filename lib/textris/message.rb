@@ -52,6 +52,8 @@ module Textris
       end
     end
 
+    alias_method :deliver_now, :deliver
+
     private
 
     def parse_from(from)
