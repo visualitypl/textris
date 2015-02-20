@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<h1>Textris example</h1>
+
+<p>This simple application demonstrates the usage scenario from <%= link_to 'textris documentation', 'https://github.com/visualitypl/textris' %>. You can add new users after which the application will send SMS with welcome notification.</p>
+
+<p>In this Rails 4.2 example, ActiveJob is used to send SMSes asynchronously. Of course, there's no backend configured by default, so job will be invoked instantly as an inline job.</p>
+
 <%= yield %>
 
 </body>

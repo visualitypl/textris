@@ -1,6 +1,6 @@
 body { background-color: #fff; color: #333; }
 
-body, p, ol, ul, td {
+body, p, ol, ul, td, input, label {
   font-family: verdana, arial, helvetica, sans-serif;
   font-size:   13px;
   line-height: 18px;
@@ -24,14 +24,12 @@ div.field, div.actions {
   color: green;
 }
 
-.field_with_errors {
-  padding: 2px;
-  background-color: red;
-  display: table;
+.field_with_errors input {
+  border-color: red;
 }
 
 #error_explanation {
-  width: 450px;
+  text-align: left;
   border: 2px solid red;
   padding: 7px;
   padding-bottom: 0;

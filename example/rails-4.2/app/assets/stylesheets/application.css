@@ -2,3 +2,18 @@
  *= require_tree .
  *= require_self
  */
+
+body { padding-top: 40px; width: 600px; margin: 0 auto; text-align: center; }
+
+h1, h3, th { font-family: serif; }
+h3 { margin-top: 50px; }
+
+.field-error { color: red; }
+
+.btn { display: inline-block; border: 0px solid black; background: #fff; text-decoration: none; padding: 5px 10px; line-height: 1.5em; color: #888 !important; }
+
+.btn:hover { color: #fff !important; background: #000; cursor: pointer; }
+
+table { margin: 0 auto; }
+table td:first-child, table th:first-child { text-align: right; }
+table td:last-child, table th:last-child { text-align: left; padding-left: 20px; }

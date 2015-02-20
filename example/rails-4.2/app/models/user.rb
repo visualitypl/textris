@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   validate :phone_plausible
 
   def phone_plausible
-    errors.add(:phone, :invalid) unless Phony.plausible?(phone)
+    errors.add(:phone, :invalid) if phone.present? && !Phony.plausible?(phone)
   end
 
   def phone=(value)
