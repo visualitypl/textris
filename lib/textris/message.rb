@@ -3,8 +3,9 @@ module Textris
     attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args
 
     def initialize(options = {})
-      @to      = parse_to      options[:to]
-      @content = parse_content options[:content]
+      @to       = parse_to      options[:to]
+      @content  = parse_content options[:content]
+      @renderer = options[:renderer]
 
       if options.has_key?(:from)
         @from_name, @from_phone = parse_from options[:from]
@@ -13,7 +14,7 @@ module Textris
         @from_phone = options[:from_phone]
       end
 
-      unless @content.present?
+      unless @content.present? || @renderer.respond_to?(:render)
         raise(ArgumentError, "Content must be provided")
       end
 
@@ -53,6 +54,10 @@ module Textris
       elsif @from_name.present?
         @from_name
       end
+    end
+
+    def content
+      @content ||= @renderer.render
     end
 
     private

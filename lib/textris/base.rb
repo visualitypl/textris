@@ -43,18 +43,22 @@ module Textris
       send(@action, *@args)
     end
 
+    def render
+      set_instance_variables_for_rendering
+
+      super render(:template => template_name, :formats => ['text'])
+    end
+
     protected
 
     def text(options = {})
-      set_instance_variables_for_rendering
-
       options = self.class.with_defaults(options)
       options.merge!(
-        :texter  => self.class,
-        :action  => @action,
-        :args    => @args,
-        :content => options[:body].is_a?(String) ? options[:body] : render(
-          :template => template_name, :formats => ['text']))
+        :texter   => self.class,
+        :action   => @action,
+        :args     => @args,
+        :content  => options[:body].is_a?(String) ? options[:body] : nil,
+        :renderer => self)
 
       ::Textris::Message.new(options)
     end

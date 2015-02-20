@@ -88,17 +88,12 @@ describe Textris::Base do
       MyTexter.action_with_inline_body
     end
 
-    it 'renders proper template when :body not provided' do
+    it 'defers template rendering when :body not provided' do
       render_options = {}
 
-      expect_any_instance_of(MyTexter).to receive(:render) do |context, options|
-        render_options = options
-      end
+      expect_any_instance_of(MyTexter).not_to receive(:render)
 
       MyTexter.action_with_template
-
-      expect(render_options[:template]).to include(
-        'my_texter/action_with_template')
     end
   end
 

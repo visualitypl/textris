@@ -11,10 +11,10 @@ class User < ActiveRecord::Base
   end
 
   after_create do
-    ## this would deliver text in synchronous way
+    ## This would send SMS instantly and slow app down...
     # UserTexter.welcome(self).deliver_now
 
-    ## ...so let's use shiny new ActiveJob instead
+    ## ...so let's use shiny, async ActiveJob instead
     UserTexter.welcome(self).deliver_later
   end
 end
