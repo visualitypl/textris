@@ -271,6 +271,34 @@ You can add optional interpolation modifiers using the `%{variable:modifiers}` s
 - `h`: humanize (for instance, `user_name` becomes `User name`)
 - `p`: format phone (for instance, `48111222333` becomes `+48 111 222 333`)
 
+## Example project
+
+[Here](https://github.com/visualitypl/textris/tree/master/example/rails-4.2) you can find a simple example project that demonstrates **textris** usage with Rails 4.2, as [described above](#usage). In order to see how it works or experiment with it, just go to project's directory and invoke:
+
+```
+bundle install
+rake db:migrate
+rails server
+```
+
+Open [application page](http://localhost:3000/) and fill in some user information. Sample texter will be invoked and you'll see similar output in your server log:
+
+```
+[ActiveJob] Enqueued Textris::Delay::ActiveJob::Job (Job ID: 71ed54f7-02e8-4205-9093-6f2a0ff7f483) to Inline(textris) with arguments: "UserTexter", "welcome", [#<User id: 1, name: "Mr Jones", phone: "48666777888", created_at: "2015-02-20 17:17:16", updated_at: "2015-02-20 17:17:16">]
+[ActiveJob]   User Load (0.3ms)  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Performing Textris::Delay::ActiveJob::Job from Inline(textris) with arguments: "UserTexter", "welcome", [#<User id: 1, name: "Mr Jones", phone: "48666777888", created_at: "2015-02-20 17:17:16", updated_at: "2015-02-20 17:17:16">]
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Sent text to +48 666 777 888
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Texter: User#welcome
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Date: 2015-02-20 18:17:16 +0100
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] From: Our Team <+48 666 777 888>
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] To: +48 666 777 888
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483]   Rendered user_texter/welcome.text.erb (0.4ms)
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Content: Welcome to our system, Mr Jones!
+[ActiveJob] [Textris::Delay::ActiveJob::Job] [71ed54f7-02e8-4205-9093-6f2a0ff7f483] Performed Textris::Delay::ActiveJob::Job from Inline(textris) in 9.98ms
+```
+
+Example project may serve as a convenient sandbox for [developing custom delivery methods](#custom-delivery-methods) or even [submitting them to textris repo](#adding-delivery-methods).
+
 ## Contributing
 
 1. Fork it (https://github.com/visualitypl/textris/fork)
