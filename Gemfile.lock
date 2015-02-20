@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    textris (0.3.2)
+    textris (0.4.0)
       actionmailer (~> 4.0)
       activejob (~> 4.2)
       phony (~> 2.8)
