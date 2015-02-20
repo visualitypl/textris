@@ -7,14 +7,14 @@ class User < ActiveRecord::Base
   end
 
   def phone=(value)
-    Phony.plausible?(value) ? super(Phony.normalize(value)) : value
+    Phony.plausible?(value) ? super(Phony.normalize(value)) : super(value)
   end
 
   after_create do
     ## this would deliver text in synchronous way
-    UserTexter.welcome(self).deliver_now
+    # UserTexter.welcome(self).deliver_now
 
     ## ...so let's use shiny new ActiveJob instead
-    # UserTexter.welcome(self).deliver_later
+    UserTexter.welcome(self).deliver_later
   end
 end

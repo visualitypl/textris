@@ -52,6 +52,7 @@ module Textris
       options.merge!(
         :texter  => self.class,
         :action  => @action,
+        :args    => @args,
         :content => options[:body].is_a?(String) ? options[:body] : render(
           :template => template_name, :formats => ['text']))
 

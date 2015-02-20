@@ -149,7 +149,11 @@ describe Textris::Delivery::Mail::Mailer do
       expect_any_instance_of(mailer).to receive(:mail).with(
         :from => "a", :to => "b" , :subject => "c", :body => "d")
 
-      mailer.notify('a', 'b', 'c', 'd')
+      message = mailer.notify('a', 'b', 'c', 'd')
+
+      if message.respond_to?(:deliver_now)
+        message.deliver_now
+      end
     end
   end
 end

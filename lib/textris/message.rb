@@ -1,6 +1,6 @@
 module Textris
   class Message
-    attr_reader :content, :from_name, :from_phone, :to, :texter, :action
+    attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args
 
     def initialize(options = {})
       @to      = parse_to      options[:to]
@@ -23,6 +23,7 @@ module Textris
 
       @texter = options[:texter]
       @action = options[:action]
+      @args   = options[:args]
     end
 
     def deliver
@@ -34,8 +35,10 @@ module Textris
       self
     end
 
-    def texter
-      if @texter.present?
+    def texter(options = {})
+      if options[:raw]
+        @texter
+      elsif @texter.present?
         @texter.to_s.split('::').last.to_s.sub(/Texter$/, '')
       end
     end
@@ -51,8 +54,6 @@ module Textris
         @from_name
       end
     end
-
-    alias_method :deliver_now, :deliver
 
     private
 

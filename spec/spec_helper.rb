@@ -3,6 +3,7 @@ require 'scrutinizer/ocular'
 require "scrutinizer/ocular/formatter"
 require "codeclimate-test-reporter"
 require "sidekiq/testing"
+require 'textris/delay/active_job/missing'
 require 'textris/delay/sidekiq/missing'
 
 CodeClimate::TestReporter.configuration.logger = Logger.new("/dev/null")
