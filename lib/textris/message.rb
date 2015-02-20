@@ -4,7 +4,7 @@ module Textris
 
     def initialize(options = {})
       @to       = parse_to      options[:to]
-      @content  = parse_content options[:content]
+      @content  = parse_content options[:content] if options[:content].present?
       @renderer = options[:renderer]
 
       if options.has_key?(:from)
@@ -57,7 +57,7 @@ module Textris
     end
 
     def content
-      @content ||= @renderer.render
+      @content ||= @renderer.render_content
     end
 
     private

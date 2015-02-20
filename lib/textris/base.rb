@@ -43,10 +43,10 @@ module Textris
       send(@action, *@args)
     end
 
-    def render
+    def render_content
       set_instance_variables_for_rendering
 
-      super render(:template => template_name, :formats => ['text'])
+      render(:template => template_name, :formats => ['text'])
     end
 
     protected

@@ -6,12 +6,11 @@ module Textris
       end
 
       def deliver_later(options = {})
-        queue = options[:queue] || :textris
         job = Textris::Delay::ActiveJob::Job
 
         [:wait, :wait_until, :queue].each do |option|
           if options.has_key?(option)
-            job = job.set(option => options[option])
+            job.set(option => options[option])
           end
         end
 

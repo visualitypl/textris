@@ -116,6 +116,53 @@ describe Textris::Message do
     end
   end
 
+  describe '#texter' do
+    it 'returns raw texter class for :raw => true' do
+      message = Textris::Message.new(
+        :texter  => String,
+        :content => 'X',
+        :from    => 'X',
+        :to      => '+48 111 222 333')
+
+      expect(message.texter(:raw => true)).to eq String
+    end
+
+    it 'returns texter class without modules and texter suffix' do
+      module SampleModule
+        class SomeSampleTexter; end
+      end
+
+      message = Textris::Message.new(
+        :texter  => SampleModule::SomeSampleTexter,
+        :content => 'X',
+        :from    => 'X',
+        :to      => '+48 111 222 333')
+
+      expect(message.texter).to eq 'SomeSample'
+    end
+  end
+
+  describe '#content' do
+    before do
+      class RenderingTexter < Textris::Base
+        def action_with_template
+          text :to => '48 600 700 800'
+        end
+      end
+    end
+
+    it 'lazily renders content' do
+      renderer = RenderingTexter.new(:action_with_template, [])
+
+      message = Textris::Message.new(
+        :renderer => renderer,
+        :from     => 'X',
+        :to       => '+48 111 222 333')
+
+      expect { message.content }.to raise_error(ActionView::MissingTemplate)
+    end
+  end
+
   describe '#deliver' do
     before do
       class XDelivery < Textris::Delivery::Base
@@ -140,69 +187,6 @@ describe Textris::Message do
       expect_any_instance_of(YDelivery).to receive(:deliver_to_all)
 
       message.deliver
-    end
-  end
-
-  context 'ActiveJob not present' do
-    let(:message) do
-      Textris::Message.new(
-        :content => 'X',
-        :from    => 'X',
-        :to      => '+48 111 222 333')
-    end
-
-    before do
-      delegate = Class.new.include(Textris::Delay::ActiveJob::Missing)
-      delegate = delegate.new
-
-      [:deliver_now, :deliver_later].each do |method|
-        allow(message).to receive(method) { delegate.send(method) }
-      end
-    end
-
-    describe '#deliver_now' do
-      it 'raises' do
-        expect do
-          message.deliver_now
-        end.to raise_error(LoadError)
-      end
-    end
-
-    describe '#deliver_later' do
-      it 'raises' do
-        expect do
-          message.deliver_later
-        end.to raise_error(LoadError)
-      end
-    end
-  end
-
-  context 'ActiveJob present' do
-    describe '#deliver_now' do
-      before do
-        class XDelivery < Textris::Delivery::Base
-          def deliver(to); end
-        end
-
-        class YDelivery < Textris::Delivery::Base
-          def deliver(to); end
-        end
-      end
-
-      it 'works the same as #deliver' do
-        expect(Textris::Delivery).to receive(:get).
-          and_return([XDelivery, YDelivery])
-
-        message = Textris::Message.new(
-          :content => 'X',
-          :from    => 'X',
-          :to      => '+48 111 222 333')
-
-        expect_any_instance_of(XDelivery).to receive(:deliver_to_all)
-        expect_any_instance_of(YDelivery).to receive(:deliver_to_all)
-
-        message.deliver_now
-      end
     end
   end
 end
