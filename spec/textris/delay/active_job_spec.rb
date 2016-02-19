@@ -5,6 +5,11 @@ describe Textris::Delay::ActiveJob do
         text :to => phone
       end
     end
+
+    class ActiveJob::Logging::LogSubscriber
+      def info(*args, &block)
+      end
+    end
   end
 
   context 'ActiveJob not present' do
@@ -83,8 +88,10 @@ describe Textris::Delay::ActiveJob do
       end
 
       it 'schedules action with proper params' do
-        job = MyTexter.delayed_action('48111222333').deliver_later(:queue => :custom)
+        job = MyTexter.delayed_action('48111222333').deliver_later
+        expect(job.queue_name).to eq 'textris'
 
+        job = MyTexter.delayed_action('48111222333').deliver_later(:queue => :custom)
         expect(job.queue_name).to eq 'custom'
 
         expect do
