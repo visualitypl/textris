@@ -8,13 +8,7 @@ module Textris
       def deliver_later(options = {})
         job = Textris::Delay::ActiveJob::Job
 
-        [:wait, :wait_until, :queue].each do |option|
-          if options.has_key?(option)
-            job.set(option => options[option])
-          end
-        end
-
-        job.perform_later(texter(:raw => true).to_s, action.to_s, args)
+        job.new(texter(:raw => true).to_s, action.to_s, args).enqueue(options)
       end
     end
   end

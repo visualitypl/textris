@@ -83,11 +83,13 @@ describe Textris::Delay::ActiveJob do
       end
 
       it 'schedules action with proper params' do
-        expect(Textris::Delay::ActiveJob::Job).to receive(:set).with(:queue => :custom)
-        expect(Textris::Delay::ActiveJob::Job).to receive(:set).with(:wait  => 100)
-        expect(Textris::Delay::ActiveJob::Job).to receive(:perform_later)
+        job = MyTexter.delayed_action('48111222333').deliver_later(:queue => :custom)
 
-        MyTexter.delayed_action('48111222333').deliver_later(:queue => :custom, :wait => 100)
+        expect(job.queue_name).to eq 'custom'
+
+        expect do
+          MyTexter.delayed_action('48111222333').deliver_later(:wait => 10)
+        end.to raise_error(NotImplementedError)
       end
 
       it 'executes job properly' do

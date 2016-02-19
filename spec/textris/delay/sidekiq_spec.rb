@@ -170,7 +170,7 @@ describe Textris::Delay::Sidekiq do
 
       it 'raises with wrong timestamp' do
         expect do
-          MyTexter.delay_until('x')
+          MyTexter.delay_until(nil)
         end.to raise_error(ArgumentError)
       end
     end

@@ -1,5 +1,6 @@
 require 'action_controller'
 require 'action_mailer'
+require 'active_support'
 require 'phony'
 
 begin
