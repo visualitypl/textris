@@ -46,12 +46,14 @@ module Textris
     def render_content
       set_instance_variables_for_rendering
 
-      render(:template => template_name, :formats => ['text'])
+      render(:template => template_name, :formats => ['text'], :locale => @locale)
     end
 
     protected
 
     def text(options = {})
+      @locale = options[:locale] || I18n.locale
+
       options = self.class.with_defaults(options)
       options.merge!(
         :texter   => self.class,
