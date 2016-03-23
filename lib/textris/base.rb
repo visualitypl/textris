@@ -3,6 +3,8 @@ require 'render_anywhere'
 module Textris
   class Base
     class RenderingController < RenderAnywhere::RenderingController
+      layout false
+
       def default_url_options
         ActionMailer::Base.default_url_options || {}
       end
