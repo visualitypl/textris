@@ -15,13 +15,22 @@ describe Textris::Delivery::Twilio do
 
     module Twilio
       module REST
-        class Client
+        class Account
           attr_reader :messages
 
           def initialize
             @messages = MessageArray.new
           end
         end
+
+        class Client
+          attr_reader :account
+
+          def initialize
+            @account = Account.new
+          end
+        end
+
       end
     end
   end
