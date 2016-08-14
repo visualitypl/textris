@@ -1,15 +1,17 @@
 module Textris
   class Message
-    attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args
+    attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args,
+      :media_url
 
     def initialize(options = {})
       initialize_content(options)
       initialize_author(options)
       initialize_recipients(options)
 
-      @texter = options[:texter]
-      @action = options[:action]
-      @args   = options[:args]
+      @texter     = options[:texter]
+      @action     = options[:action]
+      @args       = options[:args]
+      @media_url  = options[:media_url]
     end
 
     def deliver

@@ -2,10 +2,15 @@ module Textris
   module Delivery
     class Twilio < Textris::Delivery::Base
       def deliver(to)
-        client.messages.create(
+        options = {
           :from => phone_with_plus(message.from_phone),
           :to   => phone_with_plus(to),
-          :body => message.content)
+          :body => message.content
+        }
+        if message.media_url.is_a?(String) || message.media_url.is_a?(Array)
+          options[:media_url] = message.media_url
+        end
+        client.messages.create(options)
       end
 
       private
