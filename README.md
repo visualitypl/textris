@@ -2,7 +2,7 @@
 
 [![Gem Version](https://img.shields.io/gem/v/textris.svg?style=flat-square&label=version)](https://rubygems.org/gems/textris)
 [![Downloads](https://img.shields.io/gem/dt/textris.svg?style=flat-square)](https://rubygems.org/gems/textris)
-[![Build Status](https://img.shields.io/circleci/project/visualitypl/textris/master.svg?style=flat-square&label=build)](https://circleci.com/gh/visualitypl/textris/tree/master)
+[![Build Status](https://img.shields.io/travis/visualitypl/textris/master.svg?style=flat-square&label=build)](https://travis-ci.org/visualitypl/textris)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/visualitypl/textris.svg?style=flat-square)](https://scrutinizer-ci.com/g/visualitypl/textris/?branch=master)
 [![Code Climate](https://img.shields.io/codeclimate/github/visualitypl/textris.svg?style=flat-square)](https://codeclimate.com/github/visualitypl/textris)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/github/visualitypl/textris.svg?style=flat-square)](https://codeclimate.com/github/visualitypl/textris)
