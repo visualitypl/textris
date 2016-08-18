@@ -7,8 +7,8 @@ module Textris
           :to   => phone_with_plus(to),
           :body => message.content
         }
-        if message.media_url.is_a?(String) || message.media_url.is_a?(Array)
-          options[:media_url] = message.media_url
+        if message.media_urls.is_a?(Array)
+          options[:media_url] = message.media_urls
         end
         client.messages.create(options)
       end

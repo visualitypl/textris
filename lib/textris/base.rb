@@ -63,7 +63,7 @@ module Textris
         :args       => @args,
         :content    => options[:body].is_a?(String) ? options[:body] : nil,
         :renderer   => self,
-        :media_url  => options[:media_url])
+        :media_urls => options[:media_urls])
 
       ::Textris::Message.new(options)
     end
