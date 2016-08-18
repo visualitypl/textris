@@ -94,9 +94,9 @@ describe Textris::Delay::ActiveJob do
         job = MyTexter.delayed_action('48111222333').deliver_later(:queue => :custom)
         expect(job.queue_name).to eq 'custom'
 
-        expect do
-          MyTexter.delayed_action('48111222333').deliver_later(:wait => 10)
-        end.to raise_error(NotImplementedError)
+        now = Time.now.to_i
+        job = MyTexter.delayed_action('48111222333').deliver_later(:wait => 10)
+        expect(job.scheduled_at).to be >= now + 10
       end
 
       it 'executes job properly' do
