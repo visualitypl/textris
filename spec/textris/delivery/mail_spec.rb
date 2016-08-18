@@ -1,11 +1,12 @@
 describe Textris::Delivery::Mail do
   let(:message) do
     Textris::Message.new(
-      :from    => 'Mr Jones <+48 555 666 777>',
-      :to      => ['+48 600 700 800', '+48 100 200 300'],
-      :content => 'Some text',
-      :texter  => 'Namespace::MyCuteTexter',
-      :action  => 'my_action')
+      :from       => 'Mr Jones <+48 555 666 777>',
+      :to         => ['+48 600 700 800', '+48 100 200 300'],
+      :content    => 'Some text',
+      :texter     => 'Namespace::MyCuteTexter',
+      :action     => 'my_action',
+      :media_urls => ['http://example.com/hilarious.gif', 'http://example.org/serious.gif'])
   end
 
   let(:delivery) { Textris::Delivery::Mail.new(message) }
@@ -94,7 +95,7 @@ describe Textris::Delivery::Mail do
 
   it 'applies all template interpolations properly' do
     interpolations = %w{app env texter action from_name
-      from_phone to_phone content}
+      from_phone to_phone content media_urls}
 
     Rails.application.config = OpenStruct.new(
       :textris_mail_to_template => interpolations.map { |i| "%{#{i}}" }.join('-'))
@@ -102,7 +103,7 @@ describe Textris::Delivery::Mail do
     delivery.deliver_to_all
 
     expect(FakeMail.deliveries.last[:to].split('-')).to eq([
-      'MyAppName', 'test', 'MyCute', 'my_action', 'Mr Jones', '48555666777', '48100200300', 'Some text'])
+      'MyAppName', 'test', 'MyCute', 'my_action', 'Mr Jones', '48555666777', '48100200300', 'Some text', 'http://example.com/hilarious.gif, http://example.org/serious.gif'])
   end
 
   it 'applies all template interpolation modifiers properly' do

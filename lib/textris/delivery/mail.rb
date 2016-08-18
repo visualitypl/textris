@@ -61,6 +61,8 @@ module Textris
           get_rails_variable(key)
         when 'texter', 'action', 'from_name', 'from_phone', 'content'
           message.send(key)
+        when 'media_urls'
+          message.media_urls.join(', ')
         else
           variables[key.to_sym]
         end.to_s.strip
