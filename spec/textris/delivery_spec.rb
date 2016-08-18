@@ -48,6 +48,10 @@ describe Textris::Delivery do
       )
     end
 
+    after do
+      Object.send(:remove_const, :Rails) if defined?(Rails)
+    end
+
     it 'maps delivery methods from Rails config to delivery classes' do
       expect(Textris::Delivery.get).to eq([
         Textris::Delivery::Mail,

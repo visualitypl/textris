@@ -87,6 +87,10 @@ describe Textris::Delay::ActiveJob do
         )
       end
 
+      after do
+        Object.send(:remove_const, :Rails) if defined?(Rails)
+      end
+
       it 'schedules action with proper params' do
         job = MyTexter.delayed_action('48111222333').deliver_later
         expect(job.queue_name).to eq 'textris'
