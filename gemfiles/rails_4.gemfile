@@ -2,7 +2,9 @@
 
 source "https://rubygems.org"
 
-gem "rails", "~> 4.2.0"
+gem "actionmailer", "~> 4.2"
+gem "activejob", "~> 4.2"
+gem "activesupport", "~> 4.2"
 gem "rack", "> 1", "< 2"
 
 gemspec :path => "../"
