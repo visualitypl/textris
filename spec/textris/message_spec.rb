@@ -78,22 +78,22 @@ describe Textris::Message do
     end
 
     describe 'parsing :content' do
-      it 'cuts newlines and duplicate whitespace' do
+      it 'preserves newlines and duplicated whitespace' do
         message = Textris::Message.new(
           :content => "a\nb. \n\n c",
           :from    => 'X',
           :to      => '+48 111 222 333')
 
-        expect(message.content).to eq('a b. c')
+        expect(message.content).to eq("a\nb. \n\n c")
       end
 
-      it 'strips leading and trailing whitespace' do
+      it 'preserves leading whitespace, but strips trailing whitespace' do
         message = Textris::Message.new(
           :content => "  a b. c   ",
           :from    => 'X',
           :to      => '+48 111 222 333')
 
-        expect(message.content).to eq('a b. c')
+        expect(message.content).to eq("  a b. c")
       end
     end
 
