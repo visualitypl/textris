@@ -1,8 +1,9 @@
 describe Textris::Delivery::Test do
   let(:message) do
     Textris::Message.new(
-      :to      => ['+48 600 700 800', '+48 100 200 300'],
-      :content => 'Some text')
+      :to         => ['+48 600 700 800', '+48 100 200 300'],
+      :content    => 'Some text',
+      :media_urls => ["http://example.com/hilarious.gif"])
   end
 
   let(:delivery) { Textris::Delivery::Test.new(message) }
@@ -11,7 +12,7 @@ describe Textris::Delivery::Test do
     expect(delivery).to respond_to(:deliver_to_all)
   end
 
-  it 'adds proper delievries to deliveries array' do
+  it 'adds proper deliveries to deliveries array' do
     delivery.deliver_to_all
 
     expect(Textris::Delivery::Test.deliveries.count).to eq 2
@@ -25,6 +26,7 @@ describe Textris::Delivery::Test do
     expect(last_message.texter).to eq message.texter
     expect(last_message.action).to eq message.action
     expect(last_message.to[0]).to eq message.to[1]
+    expect(last_message.media_urls[0]).to eq message.media_urls[0]
   end
 
   it 'allows clearing messages array' do

@@ -14,7 +14,8 @@ module Textris
           :from_phone => message.from_phone,
           :texter     => message.texter,
           :action     => message.action,
-          :to         => to))
+          :to         => to,
+          :media_urls => message.media_urls))
       end
     end
   end

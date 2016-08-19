@@ -58,11 +58,12 @@ module Textris
 
       options = self.class.with_defaults(options)
       options.merge!(
-        :texter   => self.class,
-        :action   => @action,
-        :args     => @args,
-        :content  => options[:body].is_a?(String) ? options[:body] : nil,
-        :renderer => self)
+        :texter     => self.class,
+        :action     => @action,
+        :args       => @args,
+        :content    => options[:body].is_a?(String) ? options[:body] : nil,
+        :renderer   => self,
+        :media_urls => options[:media_urls])
 
       ::Textris::Message.new(options)
     end

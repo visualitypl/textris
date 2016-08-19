@@ -130,4 +130,23 @@ describe Textris::Delivery::Log do
       expect(logger.log).to include "Texter: MyClass#my_action"
     end
   end
+
+  context "message with media urls" do
+    let(:message) do
+      Textris::Message.new(
+        :from    => 'Mr Jones <+48 555 666 777>',
+        :to      => ['+48 600 700 800', '48100200300'],
+        :content => 'Some text',
+        :media_urls => [
+          "http://example.com/hilarious.gif",
+          "http://example.org/serious.gif"])
+    end
+
+    it 'prints all the media URLs' do
+      delivery.deliver_to_all
+
+      expect(logger.log).to include "Media URLs: http://example.com/hilarious.gif"
+      expect(logger.log).to include "            http://example.org/serious.gif"
+    end
+  end
 end
