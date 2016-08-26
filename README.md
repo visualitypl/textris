@@ -67,6 +67,27 @@ class User < ActiveRecord::Base
 end
 ```
 
+### MMS
+
+Media messages are supported if you are using the [Twilio](#twilio), [Log](#log) or [Mail](#configuring-the-mail-delivery) adapter. [Twilio currently supports sending MMS in the US and Canada](https://support.twilio.com/hc/en-us/articles/223181608-Can-I-send-or-receive-MMS-messages-).
+
+Media messages aren't part of a template, but must be specified as an array of URLs when sending the message, like:
+
+```ruby
+class UserMediaTexter < Textris::Base
+  default :from => "Our Team <+48 666-777-888>"
+
+  def welcome(user)
+    @user = user
+
+    text(
+      :to         => @user.phone,
+      :media_urls => ["http://example.com/hilarious.gif"]
+    )
+  end
+end
+```
+
 ### Background and scheduled
 
 #### ActiveJob integration
@@ -266,6 +287,7 @@ You can use the following interpolations in your mail templates:
 - `%{from_phone}`: phone number of the sender (e.g. `48666777888`)
 - `%{to_phone}`: phone number of the recipient (e.g. `48111222333`)
 - `%{content}`: message content (e.g. `Welcome to our system, Mr Jones!`)
+- `%{media_urls}`: comma separated string of media URLs (e.g. `http://example.com/hilarious.gif`)
 
 You can add optional interpolation modifiers using the `%{variable:modifiers}` syntax. These are most useful for making names e-mail friendly. The following modifiers are available:
 
