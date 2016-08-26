@@ -36,6 +36,10 @@ describe Textris::Delivery::Log do
     )
   end
 
+  after do
+    Object.send(:remove_const, :Rails) if defined?(Rails)
+  end
+
   it 'responds to :deliver_to_all' do
     expect(delivery).to respond_to(:deliver_to_all)
   end

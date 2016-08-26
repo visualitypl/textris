@@ -3,4 +3,4 @@ coverage
 pkg
 .bundle
 .ruby-version
-Gemfile.lock
+*emfile.lock
