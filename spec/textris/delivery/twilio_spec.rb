@@ -65,4 +65,57 @@ describe Textris::Delivery::Twilio do
       delivery.deliver_to_all
     end
   end
+
+  describe "sending from short codes" do
+    it 'prepends regular phone numbers code with a +' do
+      number = '48 600 700 800'
+      message = Textris::Message.new(
+        :from       => number,
+        :content    => 'Some text',
+        :to         => '+48 100 200 300'
+      )
+      delivery = Textris::Delivery::Twilio.new(message)
+
+      expect_any_instance_of(MessageArray).to receive(:create).once do |context, msg|
+        expect(msg).to have_key(:from)
+        expect(msg[:from]).to eq("+#{number.gsub(/\s/, '')}")
+      end
+
+      delivery.deliver_to_all
+    end
+
+    it 'doesn\'t prepend a 6 digit short code with a +' do
+      number = '894546'
+      message = Textris::Message.new(
+        :from       => number,
+        :content    => 'Some text',
+        :to         => '+48 100 200 300'
+      )
+      delivery = Textris::Delivery::Twilio.new(message)
+
+      expect_any_instance_of(MessageArray).to receive(:create).once do |context, msg|
+        expect(msg).to have_key(:from)
+        expect(msg[:from]).to eq(number)
+      end
+
+      delivery.deliver_to_all
+    end
+
+    it 'doesn\'t prepend a 5 digit short code with a +' do
+      number = '44397'
+      message = Textris::Message.new(
+        :from       => number,
+        :content    => 'Some text',
+        :to         => '+48 100 200 300'
+      )
+      delivery = Textris::Delivery::Twilio.new(message)
+
+      expect_any_instance_of(MessageArray).to receive(:create).once do |context, msg|
+        expect(msg).to have_key(:from)
+        expect(msg[:from]).to eq(number)
+      end
+
+      delivery.deliver_to_all
+    end
+  end
 end
