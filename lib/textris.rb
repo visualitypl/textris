@@ -22,6 +22,7 @@ else
 end
 
 require 'textris/base'
+require 'textris/utils'
 require 'textris/message'
 
 begin

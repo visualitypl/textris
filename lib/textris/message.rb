@@ -1,5 +1,9 @@
+require 'textris/utils'
+
 module Textris
   class Message
+    include Textris::Utils
+
     attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args,
       :media_urls
 
@@ -82,7 +86,7 @@ module Textris
 
     def parse_from_dual(from)
       if (matches = from.to_s.match(/(.*)\<(.*)\>\s*$/).to_a).size == 3 &&
-          Phony.plausible?(matches[2])
+          (Phony.plausible?(matches[2]) || is_short_code?(matches[2]))
         [matches[1].strip, Phony.normalize(matches[2])]
       end
     end
@@ -90,6 +94,8 @@ module Textris
     def parse_from_singular(from)
       if Phony.plausible?(from)
         [nil, Phony.normalize(from)]
+      elsif is_short_code?(from)
+        [nil, from.to_s]
       elsif from.present?
         [from.strip, nil]
       end
