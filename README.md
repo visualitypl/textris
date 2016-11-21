@@ -204,6 +204,8 @@ Twilio.configure do |config|
 end
 ```
 
+To use Twilio's Copilot use `twilio_messaging_service_sid` in place of `from` when sending a text or setting defaults.
+
 #### Nexmo
 
 In order to use Nexmo with **textris**, you need to include the `nexmo` gem in your `Gemfile`:

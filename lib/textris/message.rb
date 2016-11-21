@@ -1,7 +1,7 @@
 module Textris
   class Message
     attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args,
-      :media_urls
+      :media_urls, :twilio_messaging_service_sid
 
     def initialize(options = {})
       initialize_content(options)
@@ -60,7 +60,9 @@ module Textris
     end
 
     def initialize_author(options)
-      if options.has_key?(:from)
+      if options.has_key?(:twilio_messaging_service_sid)
+        @twilio_messaging_service_sid = options[:twilio_messaging_service_sid]
+      elsif options.has_key?(:from)
         @from_name, @from_phone = parse_from options[:from]
       else
         @from_name  = options[:from_name]

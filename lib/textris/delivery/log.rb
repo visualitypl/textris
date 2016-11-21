@@ -8,7 +8,7 @@ module Textris
         log :debug, "Texter: #{message.texter || 'UnknownTexter'}" + "#" +
           "#{message.action || 'unknown_action'}"
         log :debug, "Date: #{Time.now}"
-        log :debug, "From: #{message.from || 'unknown'}"
+        log :debug, "From: #{message.from || message.twilio_messaging_service_sid || 'unknown'}"
         log :debug, "To: #{message.to.map { |i| Phony.format(to) }.join(', ')}"
         log :debug, "Content: #{message.content}"
         (message.media_urls || []).each_with_index do |media_url, index|

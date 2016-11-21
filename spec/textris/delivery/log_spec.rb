@@ -119,6 +119,21 @@ describe Textris::Delivery::Log do
     end
   end
 
+  context "message with twilio messaging service sid" do
+    let(:message) do
+      Textris::Message.new(
+        :twilio_messaging_service_sid => 'MG9752274e9e519418a7406176694466fa',
+        :to      => ['+48 600 700 800', '48100200300'],
+        :content => 'Some text')
+    end
+
+    it 'prints proper delivery information to log' do
+      delivery.deliver_to_all
+
+      expect(logger.log).to include "From: MG9752274e9e519418a7406176694466fa"
+    end
+  end
+
   context "message with texter and action" do
     let(:message) do
       Textris::Message.new(
