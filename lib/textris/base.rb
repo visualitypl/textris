@@ -19,14 +19,17 @@ module Textris
       end
 
       def with_defaults(options)
-        (@defaults || {}).merge(options)
+        defaults.merge(options)
+      end
+
+      def defaults
+        @defaults ||= superclass.respond_to?(:defaults) ? superclass.defaults.dup : {}
       end
 
       protected
 
       def default(options)
-        @defaults ||= {}
-        @defaults.merge!(options)
+        defaults.merge!(options)
       end
 
       private

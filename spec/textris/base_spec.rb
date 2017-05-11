@@ -43,6 +43,31 @@ describe Textris::Base do
       expect(defaults[:from]).to eq 'Us'
       expect(defaults[:to]).to eq '456'
     end
+
+    it "inherits defaults from parent class" do
+      parent = Class.new(Textris::Base)
+      parent.instance_eval do
+        default :from => "Me"
+      end
+
+      child = Class.new(parent)
+
+      expect(child.with_defaults({})).to eq({ :from => "Me" })
+    end
+
+    it "overrides defaults from parent class" do
+      parent = Class.new(Textris::Base)
+      parent.instance_eval do
+        default :from => "Me"
+      end
+
+      child = Class.new(parent)
+      child.instance_eval do
+        default :from => "Not me", :to => "Me"
+      end
+
+      expect(child.with_defaults({})).to eq({ :from => "Not me", :to => "Me" })
+    end
   end
 
   describe '#with_defaults' do
