@@ -144,6 +144,11 @@ describe Textris::Message do
 
   describe '#content' do
     before do
+      class Textris::Base::RenderingController
+        def initialize(*args)
+        end
+      end
+
       class RenderingTexter < Textris::Base
         def action_with_template
           text :to => '48 600 700 800'
@@ -175,8 +180,7 @@ describe Textris::Message do
     end
 
     it 'invokes delivery classes properly' do
-      expect(Textris::Delivery).to receive(:get).
-        and_return([XDelivery, YDelivery])
+      expect(Textris::Delivery).to receive(:get) { [XDelivery, YDelivery] }
 
       message = Textris::Message.new(
         :content => 'X',
