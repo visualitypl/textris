@@ -2,7 +2,10 @@ module Textris
   module Delivery
     class Twilio < Textris::Delivery::Base
       def deliver(to)
-        options = { to: phone_with_plus(to), body: message.content }
+        options = { 
+          :to => phone_with_plus(to), 
+          :body => message.content 
+        }
 
         if message.twilio_messaging_service_sid
           options[:messaging_service_sid] = message.twilio_messaging_service_sid
