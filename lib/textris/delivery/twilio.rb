@@ -3,7 +3,7 @@ module Textris
     class Twilio < Textris::Delivery::Base
       def deliver(to)
         options = {
-          :from => phone_with_plus(message.from_phone),
+          :from => message.from,
           :to   => phone_with_plus(to),
           :body => message.content
         }
