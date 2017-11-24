@@ -37,7 +37,11 @@ module Textris
           if PhoneFormatter.is_alphameric?(@from_phone)
             @from_phone
           else
-            "#{@from_name} <#{Phony.format(@from_phone)}>"
+            if PhoneFormatter.is_a_short_code?(@from_phone)
+              "#{@from_name} <#{@from_phone}>"
+            else
+              "#{@from_name} <#{Phony.format(@from_phone)}>"
+            end
           end
         else
           Phony.format(@from_phone)
@@ -85,8 +89,11 @@ module Textris
     end
 
     def parse_from_dual(from)
-      name, sender_id = from.match(/(.*)\<(.*)\>\s*$/)&.captures
-      return unless (name && sender_id)
+      matches = from.match(/(.*)\<(.*)\>\s*$/)
+      return unless matches
+      name, sender_id = matches.captures
+      return unless name && sender_id
+
       if Phony.plausible?(sender_id) || PhoneFormatter.is_a_short_code?(sender_id)
         [name.strip, Phony.normalize(sender_id)]
       elsif PhoneFormatter.is_alphameric?(sender_id)
