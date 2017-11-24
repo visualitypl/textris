@@ -6,7 +6,7 @@ module Textris
       end
 
       def delay_for(interval)
-        unless interval.is_a?(Fixnum)
+        unless interval.is_a?(Integer)
           raise(ArgumentError, "Proper interval must be provided")
         end
 
@@ -23,5 +23,3 @@ module Textris
     end
   end
 end
-
-
