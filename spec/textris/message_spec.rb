@@ -57,6 +57,16 @@ describe Textris::Message do
         expect(message.from_name).to eq('Mr Jones')
         expect(message.from_phone).to eq('894546')
       end
+
+      it 'parses alphameric IDs and names properly' do
+        message = Textris::Message.new(
+          :content => 'X',
+          :from    => 'Mr Jones <Jones Co.> ',
+          :to      => '+48 111 222 444')
+
+        expect(message.from_name).to eq('Mr Jones')
+        expect(message.from_phone).to eq('Jones Co.')
+      end
     end
 
     describe 'parsing :to' do

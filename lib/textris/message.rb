@@ -1,9 +1,5 @@
-require 'textris/utils'
-
 module Textris
   class Message
-    include Textris::Utils
-
     attr_reader :content, :from_name, :from_phone, :to, :texter, :action, :args,
       :media_urls
 
@@ -38,7 +34,11 @@ module Textris
     def from
       if @from_phone.present?
         if @from_name.present?
-          "#{@from_name} <#{Phony.format(@from_phone)}>"
+          if PhoneFormatter.is_alphameric?(@from_phone)
+            @from_phone
+          else
+            "#{@from_name} <#{Phony.format(@from_phone)}>"
+          end
         else
           Phony.format(@from_phone)
         end
@@ -85,16 +85,19 @@ module Textris
     end
 
     def parse_from_dual(from)
-      if (matches = from.to_s.match(/(.*)\<(.*)\>\s*$/).to_a).size == 3 &&
-          (Phony.plausible?(matches[2]) || is_short_code?(matches[2]))
-        [matches[1].strip, Phony.normalize(matches[2])]
+      name, sender_id = from.match(/(.*)\<(.*)\>\s*$/)&.captures
+      return unless (name && sender_id)
+      if Phony.plausible?(sender_id) || PhoneFormatter.is_a_short_code?(sender_id)
+        [name.strip, Phony.normalize(sender_id)]
+      elsif PhoneFormatter.is_alphameric?(sender_id)
+        [name.strip, sender_id]
       end
     end
 
     def parse_from_singular(from)
       if Phony.plausible?(from)
         [nil, Phony.normalize(from)]
-      elsif is_short_code?(from)
+      elsif PhoneFormatter.is_a_short_code?(from)
         [nil, from.to_s]
       elsif from.present?
         [from.strip, nil]
