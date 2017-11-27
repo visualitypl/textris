@@ -2,7 +2,7 @@ module Textris
   class PhoneFormatter
     class << self
       def format(phone = '')
-        return phone if is_a_short_code?(phone) || is_alphameric?(phone)
+        return phone if is_a_short_code?(phone) || is_alphameric?(phone) || phone.nil?
         "#{'+' unless phone.start_with?('+')}#{phone}"
       end
 
@@ -16,11 +16,12 @@ module Textris
         Phony.plausible?(phone)
       end
 
-      # We ASSUME that if someone passes a value
-      # that cannot be resolved as a short code or a phone
-      # number, then it is Alphameric Sender ID
       def is_alphameric?(phone)
-        !is_a_phone_number?(phone) && !is_a_short_code?(phone)
+        # \A               # Start of the string
+        # (?=.*[a-zA-Z])   # Lookahead to ensure there is at least one letter in the entire string
+        # [a-zA-z\d]{1,11} # Between 1 and 11 characters in the string
+        # \z               # End of the string
+        !!phone.to_s.match(/\A(?=.*[a-zA-Z])[a-zA-z\d]{1,11}\z/)
       end
     end
   end

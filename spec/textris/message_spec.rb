@@ -61,11 +61,11 @@ describe Textris::Message do
       it 'parses alphameric IDs and names properly' do
         message = Textris::Message.new(
           :content => 'X',
-          :from    => 'Mr Jones <Jones Co.> ',
+          :from    => 'Mr Jones <Company> ',
           :to      => '+48 111 222 444')
 
         expect(message.from_name).to eq('Mr Jones')
-        expect(message.from_phone).to eq('Jones Co.')
+        expect(message.from_phone).to eq('Company')
       end
     end
 
