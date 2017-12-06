@@ -1,4 +1,4 @@
-# 0.4.5 (unreleased)
+# 0.5.0 (latest release)
 
 - **Breaking change**. `Textris::Message#parse_content` no longer strips any
   whitespace characters except for trailing characters. This allows to send
