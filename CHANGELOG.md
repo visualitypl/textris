@@ -6,3 +6,6 @@
 - Added support for sending MMS messages via Twilio with `media_urls` option.
 - Moved to TravisCI
 - Fix defaults inheritance (see issue #11)
+- Add support for Alphanumeric sender ID
+- Add support for Short Codes
+
