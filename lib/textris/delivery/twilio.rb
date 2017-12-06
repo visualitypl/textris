@@ -3,8 +3,8 @@ module Textris
     class Twilio < Textris::Delivery::Base
       def deliver(to)
         options = {
-          :from => phone_with_plus(message.from_phone),
-          :to   => phone_with_plus(to),
+          :from => PhoneFormatter.format(message.from_phone),
+          :to   => PhoneFormatter.format(to),
           :body => message.content
         }
         if message.media_urls.is_a?(Array)
@@ -14,11 +14,6 @@ module Textris
       end
 
       private
-
-      # Twillo requires phone numbers starting with a '+' sign
-      def phone_with_plus(phone)
-        phone.to_s.start_with?('+') ? phone : "+#{phone}"
-      end
 
       def client
         @client ||= ::Twilio::REST::Client.new

@@ -22,6 +22,7 @@ else
 end
 
 require 'textris/base'
+require 'textris/phone_formatter'
 require 'textris/message'
 
 begin

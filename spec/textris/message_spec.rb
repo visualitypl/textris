@@ -37,6 +37,36 @@ describe Textris::Message do
         expect(message.from_name).to eq('Mr Jones')
         expect(message.from_phone).to be_nil
       end
+
+      it 'parses short codes properly' do
+        message = Textris::Message.new(
+          :content => 'X',
+          :from    => '894546',
+          :to      => '+48 111 222 444')
+
+        expect(message.from_name).to be_nil
+        expect(message.from_phone).to eq('894546')
+      end
+
+      it 'parses short codes and names properly' do
+        message = Textris::Message.new(
+          :content => 'X',
+          :from    => 'Mr Jones <894546> ',
+          :to      => '+48 111 222 444')
+
+        expect(message.from_name).to eq('Mr Jones')
+        expect(message.from_phone).to eq('894546')
+      end
+
+      it 'parses alphameric IDs and names properly' do
+        message = Textris::Message.new(
+          :content => 'X',
+          :from    => 'Mr Jones <Company> ',
+          :to      => '+48 111 222 444')
+
+        expect(message.from_name).to eq('Mr Jones')
+        expect(message.from_phone).to eq('Company')
+      end
     end
 
     describe 'parsing :to' do
