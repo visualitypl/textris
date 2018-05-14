@@ -35,7 +35,11 @@ module Textris
       private
 
       def method_missing(method_name, *args)
-        self.new(method_name, *args).call_action
+        new(method_name, *args).call_action
+      end
+
+      def respond_to_missing?(method, *args)
+        public_instance_methods(true).include?(method) || super
       end
     end
 
