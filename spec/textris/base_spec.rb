@@ -138,6 +138,18 @@ describe Textris::Base do
 
       expect(call_info[:calls]).to eq(1)
     end
+
+    it 'raises no method error on undefined actions' do
+      expect { MyTexter.fake_action }.to raise_error NoMethodError
+    end
+
+    it 'responds to defined actions' do
+      expect(MyTexter.respond_to?(:my_action)).to eq true
+    end
+
+    it 'does not respond to undefined actions' do
+      expect(MyTexter.respond_to?(:fake_action)).to eq false
+    end
   end
 
   describe Textris::Base::RenderingController do
