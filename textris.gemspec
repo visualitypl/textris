@@ -5,8 +5,8 @@ require 'textris/version'
 Gem::Specification.new do |spec|
   spec.name     = 'textris'
   spec.version  = Textris::VERSION
-  spec.authors  = ['Karol Słuszniak']
-  spec.email    = 'k.sluszniak@visuality.pl'
+  spec.authors  = ['Visuality', 'Karol Słuszniak', 'Przemysław Mroczek', 'Jan Matusz']
+  spec.email    = 'contact@visuality.pl'
   spec.homepage = 'http://github.com/visualitypl/textris'
   spec.license  = 'MIT'
   spec.platform = Gem::Platform::RUBY
@@ -33,8 +33,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'appraisal',                 '~> 2.1'
 
   spec.add_runtime_dependency 'actionmailer',    '>= 4.0'
-  spec.add_runtime_dependency 'activejob',       '>= 4.2'
+  spec.add_runtime_dependency 'activejob',       '>= 4.2.11'
   spec.add_runtime_dependency 'activesupport',   '>= 4.2'
   spec.add_runtime_dependency 'phony',           '~> 2.8'
   spec.add_runtime_dependency 'render_anywhere', '~> 0.0'
+  spec.add_runtime_dependency 'rack',            '>= 2.0.6'
+  spec.add_runtime_dependency 'rack-protection', '>= 2.0.1'
 end
