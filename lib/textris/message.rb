@@ -80,7 +80,7 @@ module Textris
       @to = parse_to options[:to]
 
       unless @to.present?
-        raise(ArgumentError, "Recipients must be provided and E.164 compilant")
+        raise(ArgumentError, "Recipients must be provided and E.164 compliant")
       end
     end
 
