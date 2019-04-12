@@ -1,4 +1,10 @@
-# 0.5.0 (latest release)
+# 0.6.0 (latest release)
+
+* new release to support changes made with Nexmo features,
+* `respond_to_missing?` defined for base texter,
+* corrected an error typo in Message Recipients validation
+
+# 0.5.0 
 
 - **Breaking change**. `Textris::Message#parse_content` no longer strips any
   whitespace characters except for trailing characters. This allows to send
