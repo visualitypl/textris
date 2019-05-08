@@ -55,19 +55,14 @@ module Textris
     def render_content
       set_instance_variables_for_rendering
 
-      render(
-        :template => @action,
-        :template_path => @template_path,
-        :formats => ['text'],
-        :locale => @locale
-      )
+      render(:template => template_name, :formats => ['text'], :locale => @locale)
     end
 
     protected
 
     def text(options = {})
       @locale = options[:locale] || I18n.locale
-      set_template_path(options)
+      @template_path = options[:template_path].is_a?(String) ? options[:template_path] : nil
 
       options = self.class.with_defaults(options)
       options.merge!(
@@ -82,9 +77,11 @@ module Textris
 
     private
 
-    def set_template_path(options)
-      template_path = options[:template_path].is_a?(String) ? options[:template_path] : nil
-      @template_path = template_path.presence || self.class.to_s.underscore.sub('texter/', '')
+    def template_name(options)
+      template_path = @template_path.presence || self.class.to_s.underscore.sub('texter/', '')
+      action_name = @action
+
+       "#{template_path}/#{action_name}"
     end
 
     def set_instance_variables_for_rendering
