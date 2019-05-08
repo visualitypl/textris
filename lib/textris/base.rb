@@ -77,7 +77,7 @@ module Textris
 
     private
 
-    def template_name(options)
+    def template_name
       template_path = @template_path.presence || self.class.to_s.underscore.sub('texter/', '')
       action_name = @action
 
