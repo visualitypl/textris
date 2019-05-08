@@ -66,11 +66,11 @@ module Textris
 
       options = self.class.with_defaults(options)
       options.merge!(
-        :texter        => self.class,
-        :action        => @action,
-        :args          => @args,
-        :content       => options[:body].is_a?(String) ? options[:body] : nil,
-        :renderer      => self)
+        :texter     => self.class,
+        :action     => @action,
+        :args       => @args,
+        :content    => options[:body].is_a?(String) ? options[:body] : nil,
+        :renderer   => self)
 
       ::Textris::Message.new(options)
     end
@@ -81,7 +81,7 @@ module Textris
       template_path = @template_path.presence || self.class.to_s.underscore.sub('texter/', '')
       action_name = @action
 
-       "#{template_path}/#{action_name}"
+      "#{template_path}/#{action_name}"
     end
 
     def set_instance_variables_for_rendering
