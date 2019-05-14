@@ -1,4 +1,10 @@
-# 0.4.5 (unreleased)
+# 0.6.0 (latest release)
+
+* new release to support changes made with Nexmo features,
+* `respond_to_missing?` defined for base texter,
+* corrected an error typo in Message Recipients validation
+
+# 0.5.0 
 
 - **Breaking change**. `Textris::Message#parse_content` no longer strips any
   whitespace characters except for trailing characters. This allows to send
@@ -7,3 +13,6 @@
 - Moved to TravisCI
 - Added support for using Twilio Copilot which depends on having a `messaging_service_sid`.
 - Fix defaults inheritance (see issue #11)
+- Add support for Alphanumeric sender ID
+- Add support for Short Codes
+

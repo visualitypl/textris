@@ -211,7 +211,7 @@ To use Twilio's Copilot use `twilio_messaging_service_sid` in place of `from` wh
 In order to use Nexmo with **textris**, you need to include the `nexmo` gem in your `Gemfile`:
 
 ```ruby
-gem 'nexmo'
+gem 'nexmo', '~> 4'
 ```
 
 The Nexmo gem uses the environment variables `NEXMO_API_KEY` and `NEXMO_API_SECRET` to authenticate with the API.

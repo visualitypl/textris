@@ -2,7 +2,8 @@ describe Textris::Delivery::Nexmo do
   let(:message) do
     Textris::Message.new(
     :to      => ['+48 600 700 800', '+48 100 200 300'],
-    :content => 'Some text')
+    :content => 'Some text',
+    :from    => 'Alpha ID')
   end
 
   let(:delivery) { Textris::Delivery::Nexmo.new(message) }
@@ -11,6 +12,7 @@ describe Textris::Delivery::Nexmo do
     module Nexmo
       class Client
         def send_message(params)
+          params
         end
       end
     end
@@ -28,5 +30,15 @@ describe Textris::Delivery::Nexmo do
     end
 
     delivery.deliver_to_all
+  end
+
+  describe '#deliver' do
+    subject { delivery.deliver('48600700800') }
+
+    context 'when from_phone is nil' do
+      it 'will use from_name' do
+        expect(subject[:from]).to eq 'Alpha ID'
+      end
+    end
   end
 end
