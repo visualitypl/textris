@@ -1,7 +1,7 @@
 describe Textris::Delay::Sidekiq do
   before do
     class MyTexter < Textris::Base
-      def delayed_action(phone, body)
+      def delayed_action(phone, body = '')
         text :to => phone, :body => body
       end
 
