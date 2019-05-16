@@ -69,6 +69,18 @@ describe Textris::Message do
       end
     end
 
+    describe 'parsing :twilio_messaging_service_sid' do
+      it 'stores the sid' do
+        message = Textris::Message.new(
+          content:                      'X',
+          twilio_messaging_service_sid: 'MG9752274e9e519418a7406176694466fa',
+          to:                           '+48 111 222 444')
+
+        expect(message.twilio_messaging_service_sid)
+          .to eq('MG9752274e9e519418a7406176694466fa')
+      end
+    end
+
     describe 'parsing :to' do
       it 'normalizes phone numbers' do
         message = Textris::Message.new(

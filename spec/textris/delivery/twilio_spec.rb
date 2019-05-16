@@ -2,7 +2,14 @@ describe Textris::Delivery::Twilio do
 
   before do
     class MessageArray
+      @created = []
+
+      class << self
+        attr_reader :created
+      end
+
       def create(message)
+        self.class.created.push(message)
       end
     end
 
@@ -63,6 +70,25 @@ describe Textris::Delivery::Twilio do
       end
 
       delivery.deliver_to_all
+    end
+  end
+
+  describe 'sending a message using messaging service sid' do
+    let(:message) do
+      Textris::Message.new(
+        to: '+48 600 700 800',
+        content: 'Some text',
+        twilio_messaging_service_sid: 'MG9752274e9e519418a7406176694466fa')
+    end
+
+    let(:delivery) { Textris::Delivery::Twilio.new(message) }
+
+    it 'uses the sid instead of from for the message' do
+      delivery.deliver('+11234567890')
+
+      expect(MessageArray.created.last[:from]).to be_nil
+      expect(MessageArray.created.last[:messaging_service_sid])
+        .to eq('MG9752274e9e519418a7406176694466fa')
     end
   end
 

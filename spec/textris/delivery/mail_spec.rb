@@ -144,6 +144,22 @@ describe Textris::Delivery::Mail do
         'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', '48100200300', 'Some text'])
     end
   end
+
+  context 'when sending using twilio messaging service sid' do
+    let(:message) do
+      Textris::Message.new(
+        :to      => ['+48 600 700 800', '+48 100 200 300'],
+        :content => 'Some text',
+        :twilio_messaging_service_sid => 'NG9752274e9e519418a7406176694466fb')
+    end
+
+    it 'uses the sid in from instead of name and phone' do
+      delivery.deliver_to_all
+
+      expect(FakeMail.deliveries.last[:from])
+        .to eq('NG9752274e9e519418a7406176694466fb@test.my-app-name.com')
+    end
+  end
 end
 
 describe Textris::Delivery::Mail::Mailer do

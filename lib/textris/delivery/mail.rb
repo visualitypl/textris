@@ -23,7 +23,15 @@ module Textris
 
       def from_template
         Rails.application.config.try(:textris_mail_from_template) ||
-          "%{from_name:d}-%{from_phone}@%{env:d}.%{app:d}.com"
+          "#{from_format}@%{env:d}.%{app:d}.com"
+      end
+
+      def from_format
+        if message.twilio_messaging_service_sid
+          '%{twilio_messaging_service_sid}'
+        else
+          '%{from_name:d}-%{from_phone}'
+        end
       end
 
       def to_template
@@ -59,7 +67,7 @@ module Textris
         case key
         when 'app', 'env'
           get_rails_variable(key)
-        when 'texter', 'action', 'from_name', 'from_phone', 'content'
+        when 'texter', 'action', 'from_name', 'from_phone', 'content', 'twilio_messaging_service_sid'
           message.send(key)
         when 'media_urls'
           message.media_urls.join(', ')
