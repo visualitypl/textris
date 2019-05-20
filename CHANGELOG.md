@@ -1,4 +1,8 @@
-# 0.6.0 (latest release)
+# 0.7.0 (latest release)
+
+* added support for using Twilio Copilot via messaging_service_sid
+
+# 0.6.0
 
 * new release to support changes made with Nexmo features,
 * `respond_to_missing?` defined for base texter,
