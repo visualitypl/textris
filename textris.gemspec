@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'scrutinizer-ocular',        '~> 1.0'
   spec.add_development_dependency 'simplecov',                 '~> 0.9'
   spec.add_development_dependency 'twilio-ruby',               '~> 3.12'
-  spec.add_development_dependency 'nexmo',                     '~> 2.0'
+  spec.add_development_dependency 'nexmo',                     '>= 2.0', '< 5.0'
   spec.add_development_dependency 'appraisal',                 '~> 2.1'
 
   spec.add_runtime_dependency 'actionmailer',    '>= 4.0'
