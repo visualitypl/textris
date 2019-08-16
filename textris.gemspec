@@ -16,7 +16,6 @@ Gem::Specification.new do |spec|
   spec.description = "Implement texter classes for sending SMS messages in similar way to how e-mails are sent with ActionMailer-based mailers. Take advantage of e-mail proxying and enhanced phone number parsing, among others."
 
   spec.files            = Dir["lib/**/*.rb"]
-  spec.has_rdoc         = false
   spec.extra_rdoc_files = ["README.md"]
   spec.test_files       = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths    = ["lib"]
