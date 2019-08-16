@@ -297,6 +297,21 @@ You can add optional interpolation modifiers using the `%{variable:modifiers}` s
 - `h`: humanize (for instance, `user_name` becomes `User name`)
 - `p`: format phone (for instance, `48111222333` becomes `+48 111 222 333`)
 
+### URL Defaults
+
+Textris uses `ActionController::Renderer` behind the scenes. Add or modify `config/initializers/application_controller_renderer.rb` in your Rails to change the default settings:
+
+```
+# Be sure to restart your server when you modify this file.
+
+ActiveSupport::Reloader.to_prepare do
+  ApplicationController.renderer.defaults.merge!(
+    http_host: ENV['CANONICAL_HOST'], # or ActionMailer::Base.default_url_options[:host] to use the same host as ActionMailer
+    https: Rails.env.production?
+  )
+end
+```
+
 ## Example project
 
 [Here](https://github.com/visualitypl/textris/tree/master/example/rails-4.2) you can find a simple example project that demonstrates **textris** usage with Rails 4.2. In order to see how it works or experiment with it, just go to project's directory and invoke:
