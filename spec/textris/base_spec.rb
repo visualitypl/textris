@@ -116,7 +116,7 @@ describe Textris::Base do
     it 'defers template rendering when :body not provided' do
       render_options = {}
 
-      expect_any_instance_of(MyTexter).not_to receive(:render)
+      expect_any_instance_of(MyTexter).not_to receive(:render_content)
 
       MyTexter.action_with_template
     end
@@ -149,27 +149,6 @@ describe Textris::Base do
 
     it 'does not respond to undefined actions' do
       expect(MyTexter.respond_to?(:fake_action)).to eq false
-    end
-  end
-
-  describe Textris::Base::RenderingController do
-    before do
-      class Textris::Base::RenderingController
-        def initialize(*args)
-        end
-      end
-
-      class ActionMailer::Base
-        def self.default_url_options
-          'x'
-        end
-      end
-    end
-
-    it 'maps default_url_options to ActionMailer configuration' do
-      rendering_controller = Textris::Base::RenderingController.new
-
-      expect(rendering_controller.default_url_options).to eq 'x'
     end
   end
 end

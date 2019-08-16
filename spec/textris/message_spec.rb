@@ -186,7 +186,7 @@ describe Textris::Message do
 
   describe '#content' do
     before do
-      class Textris::Base::RenderingController
+      class ApplicationController < ActionController::Base
         def initialize(*args)
         end
       end
