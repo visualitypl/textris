@@ -30,6 +30,7 @@ if Scrutinizer::Ocular.should_run? ||
 end
 
 require_relative '../lib/textris'
+require_relative '../app/controllers/textris/rendering_controller'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
