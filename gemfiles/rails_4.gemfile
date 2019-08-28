@@ -6,5 +6,6 @@ gem "actionmailer", "~> 4.2"
 gem "activejob", "~> 4.2"
 gem "activesupport", "~> 4.2"
 gem "rack", "> 1", "< 2"
+gem "nokogiri", "~> 1.10.4"
 
-gemspec :path => "../"
+gemspec path: "../"
