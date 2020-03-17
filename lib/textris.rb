@@ -3,6 +3,8 @@ require 'action_mailer'
 require 'active_support'
 require 'phony'
 
+require 'textris/configuration'
+
 begin
   require 'twilio-ruby'
 rescue LoadError

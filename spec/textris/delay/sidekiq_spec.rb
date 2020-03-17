@@ -184,6 +184,20 @@ describe Textris::Delay::Sidekiq do
     end
   end
 
+  context 'with a non-default queue set' do
+    describe 'enqueuing a job' do
+      it 'uses the custom queue' do
+        Textris::Configuration.default_queue = 'custom'
+        MyTexter.delay_for(1).delayed_action('48111222333', 'Hi')
+
+        queue = Textris::Delay::Sidekiq::Worker.jobs.last['queue']
+        expect(queue).to eq('custom')
+
+        Textris::Configuration.default_queue = 'textris'
+      end
+    end
+  end
+
   context 'sidekiq gem not present' do
     before do
       delegate = Class.new.extend(Textris::Delay::Sidekiq::Missing)

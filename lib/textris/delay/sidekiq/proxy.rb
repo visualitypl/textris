@@ -13,12 +13,18 @@ module Textris
           args = [@texter, method_name, args]
 
           if @perform_in
-            ::Textris::Delay::Sidekiq::Worker.perform_in(@perform_in, *args)
+            worker.perform_in(@perform_in, *args)
           elsif @perform_at
-            ::Textris::Delay::Sidekiq::Worker.perform_at(@perform_at, *args)
+            worker.perform_at(@perform_at, *args)
           else
-            ::Textris::Delay::Sidekiq::Worker.perform_async(*args)
+            worker.perform_async(*args)
           end
+        end
+
+        private
+
+        def worker
+          ::Textris::Delay::Sidekiq::Worker.set(queue: Configuration.default_queue)
         end
       end
     end

@@ -95,8 +95,11 @@ describe Textris::Delay::ActiveJob do
         job = MyTexter.delayed_action('48111222333').deliver_later
         expect(job.queue_name).to eq 'textris'
 
-        job = MyTexter.delayed_action('48111222333').deliver_later(:queue => :custom)
+        Textris::Configuration.default_queue = 'custom'
+        job = MyTexter.delayed_action('48111222333').deliver_later
         expect(job.queue_name).to eq 'custom'
+
+        Textris::Configuration.default_queue = 'textris'
       end
 
       it 'executes job properly' do

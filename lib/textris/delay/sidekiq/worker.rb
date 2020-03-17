@@ -4,6 +4,8 @@ module Textris
       class Worker
         include ::Sidekiq::Worker
 
+        sidekiq_options queue: 'textris'
+
         def perform(texter, action, args)
           texter = texter.safe_constantize
 
