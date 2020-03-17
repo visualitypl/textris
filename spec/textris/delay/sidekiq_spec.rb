@@ -1,4 +1,8 @@
+require 'active_support/testing/time_helpers'
+
 describe Textris::Delay::Sidekiq do
+  include ActiveSupport::Testing::TimeHelpers
+
   before do
     class MyTexter < Textris::Base
       def delayed_action(phone, body)
@@ -154,18 +158,22 @@ describe Textris::Delay::Sidekiq do
 
     describe '#delay_until' do
       it 'schedules action with proper params and execution time' do
-        MyTexter.delay_until(Time.new(2020, 1, 1)).delayed_action(
-          '48111222333', 'Hi')
+        travel_to Time.new(2019, 1, 1) do
+          MyTexter.delay_until(Time.new(2020, 1, 1)).delayed_action(
+            '48111222333', 'Hi')
 
-        expect_any_instance_of(MyTexter).to receive(:text).with(
-          :to => "48111222333", :body => "Hi").and_call_original
-        expect_any_instance_of(Textris::Message).to receive(:deliver)
+          expect_any_instance_of(MyTexter).to receive(:text).with(
+            :to => "48111222333", :body => "Hi").and_call_original
+          expect_any_instance_of(Textris::Message).to receive(:deliver)
 
-        scheduled_at = Time.at(Textris::Delay::Sidekiq::Worker.jobs.last['at'])
 
-        expect(scheduled_at).to eq Time.new(2020, 1, 1)
 
-        Textris::Delay::Sidekiq::Worker.drain
+          scheduled_at = Time.at(Textris::Delay::Sidekiq::Worker.jobs.last['at'])
+
+          expect(scheduled_at).to eq Time.new(2020, 1, 1)
+
+          Textris::Delay::Sidekiq::Worker.drain
+        end
       end
 
       it 'raises with wrong timestamp' do
