@@ -21,7 +21,6 @@ else
   require 'textris/delay/sidekiq/worker'
 end
 
-require 'textris/engine'
 require 'textris/base'
 require 'textris/phone_formatter'
 require 'textris/message'

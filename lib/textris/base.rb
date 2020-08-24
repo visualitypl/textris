@@ -42,7 +42,7 @@ module Textris
     end
 
     def render_content
-      renderer = Textris::RenderingController.renderer.new
+      renderer = ActionController::Base.renderer.new
 
       renderer.render(
         template: template_name,
