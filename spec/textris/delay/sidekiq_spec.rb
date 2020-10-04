@@ -154,7 +154,9 @@ describe Textris::Delay::Sidekiq do
 
     describe '#delay_until' do
       it 'schedules action with proper params and execution time' do
-        MyTexter.delay_until(Time.new(2020, 1, 1)).delayed_action(
+        # sidekiq behaves differently if we're not queueing into the future
+        expected_scheduled_time = Time.new(Time.now.year + 1, 1, 1)
+        MyTexter.delay_until(expected_scheduled_time).delayed_action(
           '48111222333', 'Hi')
 
         expect_any_instance_of(MyTexter).to receive(:text).with(
@@ -163,7 +165,7 @@ describe Textris::Delay::Sidekiq do
 
         scheduled_at = Time.at(Textris::Delay::Sidekiq::Worker.jobs.last['at'])
 
-        expect(scheduled_at).to eq Time.new(2020, 1, 1)
+        expect(scheduled_at).to eq expected_scheduled_time
 
         Textris::Delay::Sidekiq::Worker.drain
       end
