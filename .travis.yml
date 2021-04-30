@@ -1,4 +1,5 @@
 language: ruby
+cache: bundler
 rvm:
   - 2.4.0
   - 2.5.0
@@ -6,3 +7,6 @@ rvm:
 gemfile:
   - gemfiles/rails_4.gemfile
   - gemfiles/rails_5.gemfile
+before_install:
+  - gem uninstall -v '>= 2' -i $(rvm gemdir)@global -ax bundler || true
+  - gem install bundler -v '< 2'
