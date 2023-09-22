@@ -79,7 +79,11 @@ module Textris
       def get_rails_variable(var)
         case var
         when 'app'
-          Rails.application.class.parent_name
+          if Rails.application.class.respond_to?(:module_parent_name)
+            Rails.application.class.module_parent_name
+          else
+            Rails.application.class.parent_name
+          end
         when 'env'
           Rails.env
         end

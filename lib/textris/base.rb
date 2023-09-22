@@ -1,16 +1,5 @@
-require 'render_anywhere'
-
 module Textris
   class Base
-    class RenderingController < RenderAnywhere::RenderingController
-      layout false
-
-      def default_url_options
-        ActionMailer::Base.default_url_options || {}
-      end
-    end
-
-    include RenderAnywhere
     extend Textris::Delay::Sidekiq
 
     class << self
@@ -53,9 +42,15 @@ module Textris
     end
 
     def render_content
-      set_instance_variables_for_rendering
+      renderer = ActionController::Base.renderer.new
 
-      render(:template => template_name, :formats => ['text'], :locale => @locale)
+      renderer.render(
+        template: template_name,
+        layout: false,
+        formats: [:text],
+        locale: @locale,
+        assigns: set_instance_variables_for_rendering
+      )
     end
 
     protected
@@ -84,9 +79,9 @@ module Textris
     end
 
     def set_instance_variables_for_rendering
-      instance_variables.each do |var|
-        set_instance_variable(var.to_s.sub('@', ''), instance_variable_get(var))
-      end
+      instance_variables.map do |var|
+        [var.to_s.sub('@', ''), instance_variable_get(var)]
+      end.to_h
     end
   end
 end

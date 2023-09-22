@@ -186,11 +186,6 @@ describe Textris::Message do
 
   describe '#content' do
     before do
-      class Textris::Base::RenderingController
-        def initialize(*args)
-        end
-      end
-
       class RenderingTexter < Textris::Base
         def action_with_template
           text :to => '48 600 700 800'

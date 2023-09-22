@@ -17,7 +17,7 @@ module Textris
           options[:media_url] = message.media_urls
         end
 
-        client.messages.create(options)
+        client.messages.create(**options)
       end
 
       private
